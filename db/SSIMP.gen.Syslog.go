@@ -1,9 +1,9 @@
 package	model	
 import (	
-"gorm.io/gorm"	
 "time"	
 "fmt"	
 "context"	
+"gorm.io/gorm"	
 )	
 
 type _SyslogMgr struct {
