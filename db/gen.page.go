@@ -1,4 +1,4 @@
-package model
+package db
 
 import (
 	"fmt"
@@ -138,4 +138,3 @@ func BuildDescs(columns ...string) []OrderItem {
 func NewPage(size, current int64, orderItems ...OrderItem) *Page {
 	return &Page{size: size, current: current, orders: orderItems}
 }
-

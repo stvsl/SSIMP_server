@@ -1,9 +1,10 @@
-package	model	
-import (	
-"context"	
-"gorm.io/gorm"	
-"fmt"	
-)	
+package db
+
+import (
+	"context"
+	"fmt"
+	"gorm.io/gorm"
+)
 
 type _TaskMgr struct {
 	*_BaseMgr
@@ -15,7 +16,7 @@ func TaskMgr(db *gorm.DB) *_TaskMgr {
 		panic(fmt.Errorf("TaskMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &_TaskMgr{_BaseMgr: &_BaseMgr{DB: db.Table("Task"), isRelated: globalIsRelated,ctx:ctx,cancel:cancel,timeout:-1}}
+	return &_TaskMgr{_BaseMgr: &_BaseMgr{DB: db.Table("Task"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字
@@ -29,15 +30,16 @@ func (obj *_TaskMgr) Reset() *_TaskMgr {
 	return obj
 }
 
-// Get 获取 
+// Get 获取
 func (obj *_TaskMgr) Get() (result Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
@@ -46,14 +48,14 @@ func (obj *_TaskMgr) Get() (result Task, err error) {
 func (obj *_TaskMgr) Gets() (results []*Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -76,7 +78,6 @@ func (obj *_TaskMgr) WithTask(task string) Option {
 	return optionFunc(func(o *options) { o.query["task"] = task })
 }
 
-
 // GetByOption 功能选项模式获取
 func (obj *_TaskMgr) GetByOption(opts ...Option) (result Task, err error) {
 	options := options{
@@ -87,12 +88,13 @@ func (obj *_TaskMgr) GetByOption(opts ...Option) (result Task, err error) {
 	}
 
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
@@ -108,20 +110,19 @@ func (obj *_TaskMgr) GetByOptions(opts ...Option) (results []*Task, err error) {
 
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
-
 // SelectPage 分页查询
-func (obj *_TaskMgr) SelectPage(page IPage,opts ...Option) (resultPage IPage, err error) {
+func (obj *_TaskMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -129,9 +130,9 @@ func (obj *_TaskMgr) SelectPage(page IPage,opts ...Option) (resultPage IPage, er
 		o.apply(&options)
 	}
 	resultPage = page
-	results := make([]Task,0)
+	results := make([]Task, 0)
 	var count int64 // 统计总的记录数
-	query :=  obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query)
+	query := obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -139,31 +140,30 @@ func (obj *_TaskMgr) SelectPage(page IPage,opts ...Option) (resultPage IPage, er
 	}
 	err = query.Limit(int(page.GetSize())).Offset(int(page.Offset())).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	resultPage.SetRecords(results)
 	return
 }
 
-
 //////////////////////////enume case ////////////////////////////////////////////
 
-
-// GetFromEmployid 通过employid获取内容 员工编号 
-func (obj *_TaskMgr)  GetFromEmployid(employid string) (result Task, err error) {
+// GetFromEmployid 通过employid获取内容 员工编号
+func (obj *_TaskMgr) GetFromEmployid(employid string) (result Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`employid` = ?", employid).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
@@ -172,29 +172,29 @@ func (obj *_TaskMgr)  GetFromEmployid(employid string) (result Task, err error) 
 func (obj *_TaskMgr) GetBatchFromEmployid(employids []string) (results []*Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`employid` IN (?)", employids).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
-// GetFromTask 通过task获取内容 任务 
+
+// GetFromTask 通过task获取内容 任务
 func (obj *_TaskMgr) GetFromTask(task string) (results []*Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`task` = ?", task).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -202,34 +202,29 @@ func (obj *_TaskMgr) GetFromTask(task string) (results []*Task, err error) {
 func (obj *_TaskMgr) GetBatchFromTask(tasks []string) (results []*Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`task` IN (?)", tasks).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
- //////////////////////////primary index case ////////////////////////////////////////////
- 
- // FetchByPrimaryKey primary or index 获取唯一内容
- func (obj *_TaskMgr) FetchByPrimaryKey(employid string ) (result Task, err error) {
+
+//////////////////////////primary index case ////////////////////////////////////////////
+
+// FetchByPrimaryKey primary or index 获取唯一内容
+func (obj *_TaskMgr) FetchByPrimaryKey(employid string) (result Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`employid` = ?", employid).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
- 
-
- 
-
-	
-

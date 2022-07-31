@@ -1,5 +1,5 @@
+package db
 
-package model
 import (
 	"context"
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var globalIsRelated bool = true  // 全局预加载
+var globalIsRelated bool = true // 全局预加载
 
 // prepare for other
 type _BaseMgr struct {
@@ -87,7 +87,6 @@ func (f optionFunc) apply(o *options) {
 	f(o)
 }
 
-
 // OpenRelated 打开全局预加载
 func OpenRelated() {
 	globalIsRelated = true
@@ -98,13 +97,12 @@ func CloseRelated() {
 	globalIsRelated = true
 }
 
-
 // 自定义sql查询
 type Condition struct {
 	list []*conditionInfo
 }
 
-func (c *Condition) AndWithCondition(condition bool,column string, cases string, value interface{}) (*Condition) {
+func (c *Condition) AndWithCondition(condition bool, column string, cases string, value interface{}) *Condition {
 	if condition {
 		c.list = append(c.list, &conditionInfo{
 			andor:  "and",
@@ -116,14 +114,12 @@ func (c *Condition) AndWithCondition(condition bool,column string, cases string,
 	return c
 }
 
-
 // And a Condition by and .and 一个条件
-func (c *Condition) And(column string, cases string, value interface{}) (*Condition) {
-	return c.AndWithCondition(true,column,cases,value)
+func (c *Condition) And(column string, cases string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, cases, value)
 }
 
-
-func (c *Condition) OrWithCondition(condition bool,column string, cases string, value interface{}) (*Condition)  {
+func (c *Condition) OrWithCondition(condition bool, column string, cases string, value interface{}) *Condition {
 	if condition {
 		c.list = append(c.list, &conditionInfo{
 			andor:  "or",
@@ -136,8 +132,8 @@ func (c *Condition) OrWithCondition(condition bool,column string, cases string, 
 }
 
 // Or a Condition by or .or 一个条件
-func (c *Condition) Or(column string, cases string, value interface{}) (*Condition) {
-	return c.OrWithCondition(true,column,cases,value)
+func (c *Condition) Or(column string, cases string, value interface{}) *Condition {
+	return c.OrWithCondition(true, column, cases, value)
 }
 
 func (c *Condition) Get() (where string, out []interface{}) {
@@ -173,4 +169,3 @@ type conditionInfo struct {
 	case_  string // 条件(in,>=,<=)
 	value  interface{}
 }
-	

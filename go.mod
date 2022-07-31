@@ -4,13 +4,7 @@ go 1.18
 
 require stvsljl.com/SSIMP/service v0.0.0
 
-require (
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
-	gorm.io/driver/mysql v1.3.2 // indirect
-	gorm.io/gorm v1.23.6 // indirect
-)
+require stvsljl.com/SSIMP/utils v0.0.0
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -30,9 +24,14 @@ require (
 	golang.org/x/net v0.0.0-20220726230323-06994584191e // indirect
 	golang.org/x/sys v0.0.0-20220727055044-e65921a090b8 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/datatypes v1.0.7
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 replace stvsljl.com/SSIMP/service v0.0.0 => ./service
+
+replace stvsljl.com/SSIMP/db v0.0.0 => ./db
+
+replace stvsljl.com/SSIMP/utils v0.0.0 => ./utils

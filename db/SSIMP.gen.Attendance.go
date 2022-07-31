@@ -1,10 +1,11 @@
-package	model	
-import (	
-"fmt"	
-"context"	
-"gorm.io/gorm"	
-"time"	
-)	
+package db
+
+import (
+	"context"
+	"fmt"
+	"gorm.io/gorm"
+	"time"
+)
 
 type _AttendanceMgr struct {
 	*_BaseMgr
@@ -16,7 +17,7 @@ func AttendanceMgr(db *gorm.DB) *_AttendanceMgr {
 		panic(fmt.Errorf("AttendanceMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &_AttendanceMgr{_BaseMgr: &_BaseMgr{DB: db.Table("Attendance"), isRelated: globalIsRelated,ctx:ctx,cancel:cancel,timeout:-1}}
+	return &_AttendanceMgr{_BaseMgr: &_BaseMgr{DB: db.Table("Attendance"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字
@@ -30,15 +31,16 @@ func (obj *_AttendanceMgr) Reset() *_AttendanceMgr {
 	return obj
 }
 
-// Get 获取 
+// Get 获取
 func (obj *_AttendanceMgr) Get() (result Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
@@ -47,14 +49,14 @@ func (obj *_AttendanceMgr) Get() (result Attendance, err error) {
 func (obj *_AttendanceMgr) Gets() (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -92,7 +94,6 @@ func (obj *_AttendanceMgr) WithInspectionTrack(inspectionTrack string) Option {
 	return optionFunc(func(o *options) { o.query["inspection_track"] = inspectionTrack })
 }
 
-
 // GetByOption 功能选项模式获取
 func (obj *_AttendanceMgr) GetByOption(opts ...Option) (result Attendance, err error) {
 	options := options{
@@ -103,12 +104,13 @@ func (obj *_AttendanceMgr) GetByOption(opts ...Option) (result Attendance, err e
 	}
 
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where(options.query).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
@@ -124,20 +126,19 @@ func (obj *_AttendanceMgr) GetByOptions(opts ...Option) (results []*Attendance, 
 
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where(options.query).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
-
 // SelectPage 分页查询
-func (obj *_AttendanceMgr) SelectPage(page IPage,opts ...Option) (resultPage IPage, err error) {
+func (obj *_AttendanceMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -145,9 +146,9 @@ func (obj *_AttendanceMgr) SelectPage(page IPage,opts ...Option) (resultPage IPa
 		o.apply(&options)
 	}
 	resultPage = page
-	results := make([]Attendance,0)
+	results := make([]Attendance, 0)
 	var count int64 // 统计总的记录数
-	query :=  obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where(options.query)
+	query := obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -155,31 +156,30 @@ func (obj *_AttendanceMgr) SelectPage(page IPage,opts ...Option) (resultPage IPa
 	}
 	err = query.Limit(int(page.GetSize())).Offset(int(page.Offset())).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	resultPage.SetRecords(results)
 	return
 }
 
-
 //////////////////////////enume case ////////////////////////////////////////////
 
-
-// GetFromEmployid 通过employid获取内容 员工编号 
-func (obj *_AttendanceMgr)  GetFromEmployid(employid string) (result Attendance, err error) {
+// GetFromEmployid 通过employid获取内容 员工编号
+func (obj *_AttendanceMgr) GetFromEmployid(employid string) (result Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`employid` = ?", employid).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
@@ -188,29 +188,29 @@ func (obj *_AttendanceMgr)  GetFromEmployid(employid string) (result Attendance,
 func (obj *_AttendanceMgr) GetBatchFromEmployid(employids []string) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`employid` IN (?)", employids).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
-// GetFromStartTime 通过startTime获取内容 开始时间 
+
+// GetFromStartTime 通过startTime获取内容 开始时间
 func (obj *_AttendanceMgr) GetFromStartTime(startTime time.Time) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`startTime` = ?", startTime).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -218,29 +218,29 @@ func (obj *_AttendanceMgr) GetFromStartTime(startTime time.Time) (results []*Att
 func (obj *_AttendanceMgr) GetBatchFromStartTime(startTimes []time.Time) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`startTime` IN (?)", startTimes).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
-// GetFromEndTime 通过endTime获取内容 结束时间 
+
+// GetFromEndTime 通过endTime获取内容 结束时间
 func (obj *_AttendanceMgr) GetFromEndTime(endTime time.Time) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`endTime` = ?", endTime).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -248,29 +248,29 @@ func (obj *_AttendanceMgr) GetFromEndTime(endTime time.Time) (results []*Attenda
 func (obj *_AttendanceMgr) GetBatchFromEndTime(endTimes []time.Time) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`endTime` IN (?)", endTimes).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
-// GetFromTaskCompletion 通过task_completion获取内容 任务完成情况 
+
+// GetFromTaskCompletion 通过task_completion获取内容 任务完成情况
 func (obj *_AttendanceMgr) GetFromTaskCompletion(taskCompletion string) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`task_completion` = ?", taskCompletion).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -278,29 +278,29 @@ func (obj *_AttendanceMgr) GetFromTaskCompletion(taskCompletion string) (results
 func (obj *_AttendanceMgr) GetBatchFromTaskCompletion(taskCompletions []string) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`task_completion` IN (?)", taskCompletions).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
-// GetFromInspectionTrack 通过inspection_track获取内容 巡查轨迹 
+
+// GetFromInspectionTrack 通过inspection_track获取内容 巡查轨迹
 func (obj *_AttendanceMgr) GetFromInspectionTrack(inspectionTrack string) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`inspection_track` = ?", inspectionTrack).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
 
@@ -308,34 +308,29 @@ func (obj *_AttendanceMgr) GetFromInspectionTrack(inspectionTrack string) (resul
 func (obj *_AttendanceMgr) GetBatchFromInspectionTrack(inspectionTracks []string) (results []*Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`inspection_track` IN (?)", inspectionTracks).Find(&results).Error
 	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表 
+		for i := 0; i < len(results); i++ {
+			if err = obj.NewDB().Table("Employer").Where("employid = ?", results[i].Employid).Find(&results[i].Employer).Error; err != nil { // 员工信息表
 				if err != gorm.ErrRecordNotFound { // 非 没找到
 					return
 				}
-			}  
+			}
+		}
 	}
-}
 	return
 }
- 
- //////////////////////////primary index case ////////////////////////////////////////////
- 
- // FetchByPrimaryKey primary or index 获取唯一内容
- func (obj *_AttendanceMgr) FetchByPrimaryKey(employid string ) (result Attendance, err error) {
+
+//////////////////////////primary index case ////////////////////////////////////////////
+
+// FetchByPrimaryKey primary or index 获取唯一内容
+func (obj *_AttendanceMgr) FetchByPrimaryKey(employid string) (result Attendance, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Attendance{}).Where("`employid` = ?", employid).Find(&result).Error
-	if err == nil && obj.isRelated {  
-		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表 
-				if err != gorm.ErrRecordNotFound { // 非 没找到
-					return
-				}
-			} }
+	if err == nil && obj.isRelated {
+		if err = obj.NewDB().Table("Employer").Where("employid = ?", result.Employid).Find(&result.Employer).Error; err != nil { // 员工信息表
+			if err != gorm.ErrRecordNotFound { // 非 没找到
+				return
+			}
+		}
+	}
 
 	return
 }
- 
-
- 
-
-	
-
