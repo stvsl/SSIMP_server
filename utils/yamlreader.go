@@ -66,3 +66,13 @@ func GetSecurityConfig() *SecurityConfig {
 	yaml.Unmarshal(yamlFile, &securityConfig)
 	return &securityConfig
 }
+
+func GetLogConfig() *Logger {
+	var logConfig Logger
+	yamlFile, err := os.ReadFile("./config.yaml")
+	if err != nil {
+		panic(err)
+	}
+	yaml.Unmarshal(yamlFile, &logConfig)
+	return &logConfig
+}

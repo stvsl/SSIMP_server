@@ -2,6 +2,14 @@ module stvsljl.com/SSIMP/service
 
 require github.com/gin-gonic/gin v1.8.1
 
+require stvsljl.com/SSIMP/db v0.0.0
+
+require stvsljl.com/SSIMP/security v0.0.0
+
+replace stvsljl.com/SSIMP/security v0.0.0 => ../security
+
+replace stvsljl.com/SSIMP/db v0.0.0 => ../db
+
 go 1.18
 
 require (

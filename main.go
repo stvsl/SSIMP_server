@@ -12,7 +12,7 @@ import (
 func main() {
 	fmt.Println("请输入运行模式 1. 测试模式 2. 生产模式")
 	var mode = "1"
-	fmt.Scanln(mode)
+	fmt.Scanln(&mode)
 	if mode == "1" {
 		db.Connect()
 		mgr := db.AdminMgr(db.GetConn())

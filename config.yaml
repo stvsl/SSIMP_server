@@ -9,3 +9,5 @@ redishost: 120.48.17.34 # redis主机IP地址
 redisport: 5210 # redis端口号
 redispwd: stvsl2060 # redis密码
 rsaUpdateLifecycle: 120 # rsa更新周期，单位分钟
+logFormat: text # 日志格式
+logDir: ./log # 日志目录
