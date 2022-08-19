@@ -9,14 +9,6 @@ import (
 	"log"
 )
 
-// 服务器RSA私钥
-var RSA_PRIVATE_LOCAL string
-var RSA_PRIVATE_LOCAL_BYTES *rsa.PrivateKey
-
-// 服务器RSA公钥
-var RSA_PUBLIC_LOCAL string
-var RSA_PUBLIC_LOCAL_BYTES *rsa.PublicKey
-
 // 生成RSA密钥对
 func GenerateRsaKey() (string, string, error) {
 	// 生成私钥
@@ -64,10 +56,10 @@ func GenerateLocalRsaKey() {
 			Bytes: x509.MarshalPKCS1PublicKey(publicKey),
 		},
 	)
-	RSA_PRIVATE_LOCAL = string(privateKeyPem)
-	RSA_PRIVATE_LOCAL_BYTES = privateKey
-	RSA_PUBLIC_LOCAL = string(publicKeyPem)
-	RSA_PUBLIC_LOCAL_BYTES = publicKey
+	SERVER_RSA.PRIVATE_KEY = privateKeyPem
+	SERVER_RSA.PUBLIC_KEY = publicKeyPem
+	SERVER_RSA.PRIVATE_KEY_BYTES = privateKey
+	SERVER_RSA.PUBLIC_KEY_BYTES = publicKey
 }
 
 // 加密算法（使用PKCS1密钥）
@@ -101,9 +93,4 @@ func Decrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
 	}
 	// 解密
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
-}
-
-// 返回服务器公钥字符串
-func GetPublicKey() string {
-	return RSA_PUBLIC_LOCAL
 }

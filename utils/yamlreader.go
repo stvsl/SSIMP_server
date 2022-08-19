@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -22,9 +22,13 @@ type RedisConfig struct {
 	Pwd  string `yaml:"redispwd"`  // redis密码
 }
 
-func GetSqlConnConfig() string {
+type SecurityConfig struct {
+	RSAUpdateLifecycle int `yaml:"rsaUpdateLifecycle"` // RSA密钥更新周期（单位：分钟）
+}
+
+func GetSqlConnConfigStr() string {
 	var sqlConfig SqlConfig
-	yamlFile, err := ioutil.ReadFile("./config.yaml")
+	yamlFile, err := os.ReadFile("./config.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -35,10 +39,30 @@ func GetSqlConnConfig() string {
 
 func GetSqlConfig() *SqlConfig {
 	var sqlConfig SqlConfig
-	yamlFile, err := ioutil.ReadFile("./config.yaml")
+	yamlFile, err := os.ReadFile("./config.yaml")
 	if err != nil {
 		panic(err)
 	}
 	yaml.Unmarshal(yamlFile, &sqlConfig)
 	return &sqlConfig
+}
+
+func GetRedisConfig() *RedisConfig {
+	var redisConfig RedisConfig
+	yamlFile, err := os.ReadFile("./config.yaml")
+	if err != nil {
+		panic(err)
+	}
+	yaml.Unmarshal(yamlFile, &redisConfig)
+	return &redisConfig
+}
+
+func GetSecurityConfig() *SecurityConfig {
+	var securityConfig SecurityConfig
+	yamlFile, err := os.ReadFile("./config.yaml")
+	if err != nil {
+		panic(err)
+	}
+	yaml.Unmarshal(yamlFile, &securityConfig)
+	return &securityConfig
 }
