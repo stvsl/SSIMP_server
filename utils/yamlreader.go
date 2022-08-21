@@ -17,9 +17,9 @@ type SqlConfig struct {
 }
 
 type RedisConfig struct {
-	Host string `yaml:"redishost"` // redis主机地址
-	Port int    `yaml:"redisport"` // redis端口
-	Pwd  string `yaml:"redispwd"`  // redis密码
+	Host     string `yaml:"redishost"`     // redis主机地址以及端口
+	Pwd      string `yaml:"redispwd"`      // redis密码
+	PoolSize int    `yaml:"redisPoolSize"` // redis连接池大小
 }
 
 type SecurityConfig struct {

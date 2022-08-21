@@ -25,10 +25,11 @@ var SERVER_RSA_LAST Security
 func Init() {
 	GenerateLocalRsaKey()
 	SERVER_RSA_LAST = SERVER_RSA
-	go AutoUpdate()
+	go autoUpdate()
 }
 
-func AutoUpdate() {
+// RSA加密自动更新
+func autoUpdate() {
 	tracker := time.NewTicker(time.Minute * time.Duration(utils.GetSecurityConfig().RSAUpdateLifecycle))
 	defer tracker.Stop()
 	for t := range tracker.C {

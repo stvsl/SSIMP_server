@@ -4,7 +4,7 @@ require stvsljl.com/SSIMP/utils v0.0.0
 
 require (
 	gorm.io/datatypes v1.0.7
-	gorm.io/driver/mysql v1.3.5
+	gorm.io/driver/mysql v1.3.6
 	gorm.io/gorm v1.23.8
 )
 
@@ -20,4 +20,4 @@ require (
 
 replace stvsljl.com/SSIMP/utils v0.0.0 => ../utils
 
-go 1.18
+go 1.19

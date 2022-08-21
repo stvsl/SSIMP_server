@@ -11,4 +11,4 @@ require (
 
 replace stvsljl.com/SSIMP/utils v0.0.0 => ../utils
 
-go 1.18
+go 1.19
