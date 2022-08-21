@@ -7,6 +7,7 @@ import (
 	"stvsljl.com/SSIMP/db"
 	"stvsljl.com/SSIMP/security"
 	"stvsljl.com/SSIMP/service"
+	"stvsljl.com/SSIMP/utils"
 )
 
 func main() {
@@ -17,10 +18,10 @@ func main() {
 		db.Connect()
 		mgr := db.AdminMgr(db.GetConn())
 		test, _ := mgr.GetFromAdminID("1234567890")
-		fmt.Println(test)
+		utils.Log.Init()
+		utils.Log.Info(test)
 		security.Init()
-		fmt.Println(string(security.SERVER_RSA.PRIVATE_KEY))
-		fmt.Println(string(security.SERVER_RSA.PUBLIC_KEY))
+		utils.Log.Info("服务器RSA密钥更新")
 		time.Sleep(120 * time.Second)
 	} else if mode == "2" {
 		db.Connect()
