@@ -8,12 +8,12 @@ import (
 )
 
 type AESWaitClient struct {
-	Feature      string
-	ClientPubKey string
+	Feature        string
+	ClientFragment string
 }
 
 func (a *AESWaitClient) WriteToRedis() error {
-	err := rdb.HSet(context.Background(), "AESWaitClient", a.Feature, a.ClientPubKey, time.Duration(120)*time.Second).Err()
+	err := rdb.HSet(context.Background(), "AESWaitClient", a.Feature, a.ClientFragment, time.Duration(120)*time.Second).Err()
 	if err != nil {
 		utils.Log.Error("redis存储失败：", err)
 	}
@@ -21,16 +21,16 @@ func (a *AESWaitClient) WriteToRedis() error {
 }
 
 func (a *AESWaitClient) ReadAndRemoveFromRedis() (string, error) {
-	clientPubKey, err := rdb.HGet(context.Background(), "AESWaitClient", a.Feature).Result()
+	clientFragment, err := rdb.HGet(context.Background(), "AESWaitClient", a.Feature).Result()
 	if err != nil {
 		utils.Log.Error("键值不存在", err)
 		return "", err
 	}
-	a.ClientPubKey = clientPubKey
+	a.ClientFragment = clientFragment
 	status, err := rdb.HDel(context.Background(), "AESWaitClient", a.Feature).Result()
 	if err != nil || status == 0 {
 		utils.Log.Error("redis删除失败：", err)
 		return "", err
 	}
-	return clientPubKey, err
+	return clientFragment, err
 }

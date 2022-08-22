@@ -20,9 +20,10 @@ func ClientRsakey(c *gin.Context) {
 	if err1 != nil || err2 != nil {
 		Code.SE400(c)
 	}
+	//
 	awc := redis.AESWaitClient{
-		Feature:      string(dFeature),
-		ClientPubKey: string(dClientPubKey),
+		Feature:        string(dFeature),
+		ClientFragment: string(dClientPubKey),
 	}
 	awc.WriteToRedis()
 }
