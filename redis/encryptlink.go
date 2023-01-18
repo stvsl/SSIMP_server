@@ -2,35 +2,35 @@ package redis
 
 import (
 	"context"
-	"time"
 
 	"stvsljl.com/SSIMP/utils"
 )
 
 type AESWaitClient struct {
-	Feature        string
-	ClientFragment string
+	Feature string
+	AES     string
 }
 
 func (a *AESWaitClient) WriteToRedis() error {
-	err := rdb.HSet(context.Background(), "AESWaitClient", a.Feature, a.ClientFragment, time.Duration(120)*time.Second).Err()
-	if err != nil {
-		utils.Log.Error("redis存储失败：", err)
+	status, err := rdb.HSet(context.Background(), "AESWaitClient", a.Feature, a.AES).Result()
+	if err != nil || status == 0 {
+		utils.Log.Error("redis写入失败", err)
+		return err
 	}
-	return err
+	return nil
 }
 
 func (a *AESWaitClient) ReadAndRemoveFromRedis() (string, error) {
-	clientFragment, err := rdb.HGet(context.Background(), "AESWaitClient", a.Feature).Result()
+	aes, err := rdb.HGet(context.Background(), "AESWaitClient", a.Feature).Result()
 	if err != nil {
 		utils.Log.Error("键值不存在", err)
 		return "", err
 	}
-	a.ClientFragment = clientFragment
+	a.AES = aes
 	status, err := rdb.HDel(context.Background(), "AESWaitClient", a.Feature).Result()
 	if err != nil || status == 0 {
 		utils.Log.Error("redis删除失败：", err)
 		return "", err
 	}
-	return clientFragment, err
+	return aes, err
 }

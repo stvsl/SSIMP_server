@@ -12,7 +12,7 @@ import (
 // 生成RSA密钥对
 func GenerateRsaKey() (string, string, error) {
 	// 生成私钥
-	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return "", "", err
 	}
@@ -37,7 +37,7 @@ func GenerateRsaKey() (string, string, error) {
 // 生成服务器本地密钥对
 func GenerateLocalRsaKey() {
 	// 生成私钥
-	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return
 	}

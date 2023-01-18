@@ -15,6 +15,8 @@ type Logger struct {
 	LogFormat string `yaml:"logFormat"`
 	// 指定日志输出目录
 	LogDir string `yaml:"logDir"`
+	// 日志保留天数
+	LogKeepDays int `yaml:"logKeepDays"`
 }
 
 var file *os.File
@@ -46,6 +48,28 @@ func (log *Logger) Init() {
 		}
 		opt := io.MultiWriter(os.Stdout, file)
 		logrus.SetOutput(opt)
+	}
+	go log.CleanLog()
+}
+
+// 定时清理日志
+func (log *Logger) CleanLog() {
+	go func() {
+		for {
+			time.Sleep(time.Hour * 24)
+			log.Clean()
+		}
+	}()
+}
+
+// 清理日志
+func (log *Logger) Clean() {
+	now := time.Now()
+	lastday := now.AddDate(0, 0, -(log.LogKeepDays))
+	lastdayDate := lastday.Format("2006-01-02")
+	err := os.Remove(Log.LogDir + "/" + lastdayDate + ".log")
+	if err != nil {
+		log.Panic("日志文件删除失败：", err)
 	}
 }
 

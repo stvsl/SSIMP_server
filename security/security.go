@@ -2,7 +2,6 @@ package security
 
 import (
 	"crypto/rsa"
-	"fmt"
 	"time"
 
 	"stvsljl.com/SSIMP/utils"
@@ -21,6 +20,10 @@ type Security struct {
 var SERVER_RSA Security
 var SERVER_RSA_LAST Security
 
+func (Security *Security) GetPublicKey() string {
+	return string(Security.PUBLIC_KEY)
+}
+
 // 服务器通讯RSA初始化
 func Init() {
 	GenerateLocalRsaKey()
@@ -33,7 +36,7 @@ func autoUpdate() {
 	tracker := time.NewTicker(time.Minute * time.Duration(utils.GetSecurityConfig().RSAUpdateLifecycle))
 	defer tracker.Stop()
 	for t := range tracker.C {
-		fmt.Println("RSA Update Time: ", t)
+		utils.Log.Info("RSA密钥更新", t)
 		RsaUpdate()
 		tracker.Reset(time.Minute * time.Duration(utils.GetSecurityConfig().RSAUpdateLifecycle))
 	}

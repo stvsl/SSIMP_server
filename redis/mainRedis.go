@@ -18,7 +18,6 @@ func Init() error {
 		DB:       0,               // 数据库
 		PoolSize: config.PoolSize, // 连接池大小
 	})
-	defer rdb.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	_, err := rdb.Ping(ctx).Result()

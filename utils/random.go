@@ -1,26 +1,33 @@
 package utils
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"math/big"
 	"time"
 )
 
+// GetRandomString 生成随机数
 func GetRandom(leng int, key string) int {
-	r1 := rand.New(rand.NewSource(time.Now().UnixNano()))
-	var keyNum []int
+	var keyInt int
 	for _, v := range key {
 		if v >= 48 && v <= 57 {
-			keyNum = append(keyNum, int(v)-48)
+			keyInt = keyInt*10 + int(v) - 48
 		}
 	}
-	var keyInt int
-	for _, v := range keyNum {
-		keyInt = keyInt*10 + v
+	if keyInt == 0 {
+		keyInt = time.Now().Nanosecond()
 	}
-	r2 := rand.New(rand.NewSource(int64(keyInt)))
-	rand := r1.Intn(leng) + r2.Intn(leng) - rand.Intn(leng)
-	if rand < 0 {
-		rand = -rand
+	r2, _ := rand.Int(rand.Reader, big.NewInt(int64(keyInt)))
+	rand := r2.Int64() % int64(leng)
+	return int(rand)
+}
+
+// GetRandomString 生成随机字符串
+func GetRandomString(leng int, key string) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	for i := 0; i < leng; i++ {
+		rand := GetRandom(62, key)
+		key = key + string(str[rand])
 	}
-	return rand
+	return key
 }
