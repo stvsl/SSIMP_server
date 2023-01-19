@@ -41,7 +41,7 @@ func ClientRsakey(c *gin.Context) {
 		Code.SE401(c)
 	}
 	fmt.Println(string(dFeature))
-	aesp2 := utils.GetRandomString(16, string(dAESP))
+	aesp2, _ := utils.GetRandomString(16)
 	// 计算dAESP和aesp2的异或值
 	aesp := utils.Xor(string(dAESP), aesp2)
 	aes := utils.Md5(aesp)

@@ -2,32 +2,55 @@ package utils
 
 import (
 	"crypto/rand"
-	"math/big"
-	"time"
+	"errors"
 )
 
-// GetRandomString 生成随机数
-func GetRandom(leng int, key string) int {
-	var keyInt int
-	for _, v := range key {
-		if v >= 48 && v <= 57 {
-			keyInt = keyInt*10 + int(v) - 48
-		}
+// GetRandom 生成随机数(正整数)
+func GetRandom(leng int) (int, error) {
+	if leng <= 0 {
+		return 0, errors.New("长度非法")
 	}
-	if keyInt == 0 {
-		keyInt = time.Now().Nanosecond()
+	b := make([]byte, leng)
+	_, err := rand.Read(b)
+	if err != nil {
+		return 0, err
 	}
-	r2, _ := rand.Int(rand.Reader, big.NewInt(int64(keyInt)))
-	rand := r2.Int64() % int64(leng)
-	return int(rand)
+	return int(b[0]), nil
+}
+
+// 生成指定范围的随机数
+func GetRandomRange(min, max int) (int, error) {
+	if min > max {
+		return 0, errors.New("范围非法")
+	}
+	if min == max {
+		return min, nil
+	}
+	// 使用 crypto/rand 生成随机小数，随后乘以范围，再加上最小值
+	b := make([]byte, 8)
+	_, err := rand.Read(b)
+	if err != nil {
+		return 0, err
+	}
+	r := int(b[0])%max + min
+	return r, nil
 }
 
 // GetRandomString 生成随机字符串
-func GetRandomString(leng int, key string) string {
+// leng 随机字符串的长度
+func GetRandomString(leng int) (string, error) {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	for i := 0; i < leng; i++ {
-		rand := GetRandom(62, key)
-		key = key + string(str[rand])
+	if leng < 0 {
+		return "", errors.New("长度非法")
 	}
-	return key
+	// 使用getRandomRange生成随机数，然后取出对应的字符
+	var result string
+	for i := 0; i < leng; i++ {
+		r, err := GetRandomRange(0, len(str)-1)
+		if err != nil {
+			return "", err
+		}
+		result += string(str[r])
+	}
+	return result, nil
 }
