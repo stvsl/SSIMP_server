@@ -32,6 +32,15 @@ func main() {
 			test, _ := mgr.GetFromAdminID("1234567890")
 			fmt.Println(test)
 		}
+	} else if mode == "3" {
+		// 安全组件相关事务初始化
+		security.Init()
+		// 加密
+		data, _ := security.RsaEncrypt([]byte("1234567890"))
+		fmt.Println(data)
+		// 解密
+		data, _ = security.RsaDecrypt(data)
+		fmt.Println(string(data))
 	}
 
 }
