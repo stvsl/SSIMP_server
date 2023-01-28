@@ -38,13 +38,13 @@ func ClientRsakey(c *gin.Context) {
 	dAESP, err3 := security.RsaDecrypt(bAESP)
 	// fmt.Println("特征值" + string(dFeature))
 	// fmt.Println("客户端公钥" + string(dClientPubKey))
-	// fmt.Println("AES密钥（部分）" + string(dAESP))
+	fmt.Println("AES密钥（部分）" + string(dAESP))
 	if err1 != nil || err2 != nil || err3 != nil {
 		fmt.Println("客户端公钥解析失败" + "1" + err1.Error() + "2" + err2.Error() + "3" + err3.Error())
 		utils.Log.Error("客户端公钥解析失败" + err1.Error() + err2.Error() + err3.Error())
 		Code.SE401(c)
 	}
-	aesp2, _ := utils.GetRandomString(16)
+	aesp2, _ := utils.GetRandomString(64)
 	// 计算dAESP和aesp2的异或值
 	aesp := utils.Xor(string(dAESP), aesp2)
 	aes := utils.Md5(aesp)
@@ -60,6 +60,7 @@ func ClientRsakey(c *gin.Context) {
 		Code.SE610(c)
 		return
 	}
+	fmt.Println("AES密钥2", aesp2)
 	fmt.Println("AES密钥 " + string(aes))
 	aesp2Byte := []byte(aesp2)
 	// 将aesp2加密后返回
