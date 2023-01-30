@@ -1,6 +1,9 @@
 module stvsljl.com/SSIMP/service
 
-require github.com/gin-gonic/gin v1.8.1
+require (
+	github.com/gin-gonic/gin v1.8.1
+	github.com/golang-jwt/jwt v3.2.2+incompatible
+)
 
 require (
 	stvsljl.com/SSIMP/db v0.0.0

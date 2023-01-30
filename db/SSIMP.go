@@ -16,8 +16,7 @@ CREATE TABLE `Admin` (
   `idcard` int(18) NOT NULL COMMENT '身份证号',
   `telephone` int(11) NOT NULL COMMENT '联系电话',
   `address` varchar(40) NOT NULL COMMENT '家庭住址',
-  `bust_photo` blob DEFAULT NULL COMMENT '半身照片',
-  `avatar` blob DEFAULT NULL COMMENT '头像',
+  `avatar` varchar(100) DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`adminID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员信息表'
 ******sql******/
@@ -31,8 +30,7 @@ type Admin struct {
 	IDcard       int            `gorm:"column:idcard;type:int(18);not null" json:"idcard"`           // 身份证号
 	Telephone    int            `gorm:"column:telephone;type:int(11);not null" json:"telephone"`     // 联系电话
 	Address      string         `gorm:"column:address;type:varchar(40);not null" json:"address"`     // 家庭住址
-	BustPhoto    []byte         `gorm:"column:bust_photo;type:blob" json:"bustPhoto"`                // 半身照片
-	Avatar       []byte         `gorm:"column:avatar;type:blob" json:"avatar"`                       // 头像
+	Avatar       string         `gorm:"column:avatar;type:carchar(100)" json:"avatar"`               // 头像
 }
 
 // TableName get sql table name.获取数据库表名
