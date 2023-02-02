@@ -34,13 +34,24 @@ func main() {
 		}
 	} else if mode == "3" {
 		// 安全组件相关事务初始化
+		chapertext := "1234567890"
+		passed := "e806256002f490a56333d2b66d48d20b"
+		fmt.Println("加密前原文" + chapertext)
+		fmt.Println("加密前密码" + passed)
+		// 二进制
+		fmt.Println("加密前原文二进制" + fmt.Sprintf("%b", []byte(chapertext)))
+		fmt.Println("加密前密码二进制" + fmt.Sprintf("%b", []byte(passed)))
 		security.Init()
-		// 加密
-		data, _ := security.RsaEncrypt([]byte("1234567890"))
-		fmt.Println(data)
-		// 解密
-		data, _ = security.RsaDecrypt(data)
-		fmt.Println(string(data))
+		crypted, err := security.AesEncrypt([]byte(chapertext), []byte(passed))
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("加密后" + string(crypted))
+		decrypted, err := security.AesDecrypt(crypted, []byte(passed))
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("解密后" + string(decrypted))
 	}
 
 }

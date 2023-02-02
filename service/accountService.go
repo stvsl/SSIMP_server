@@ -1,6 +1,9 @@
 package service
 
 import (
+	"encoding/base64"
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"stvsljl.com/SSIMP/db"
 	"stvsljl.com/SSIMP/redis"
@@ -9,27 +12,45 @@ import (
 
 func AdminLogin(c *gin.Context) {
 	// 从请球体中获取用户名和密码
-	id := c.PostForm("id")
-	passwd := c.PostForm("passwd")
-	feature := c.PostForm("feature")
+	var json struct {
+		ID      string `json:"id"`
+		Passwd  string `json:"passwd"`
+		Feature string `json:"feature"`
+	}
+	if err := c.ShouldBindJSON(&json); err != nil {
+		Code.SE400(c)
+		return
+	}
+	jid, err1 := base64.StdEncoding.DecodeString(json.ID)
+	jpasswd, err2 := base64.StdEncoding.DecodeString(json.Passwd)
+	if err1 != nil || err2 != nil {
+		Code.SE401(c)
+		return
+	}
+	json.ID = string(jid)
+	json.Passwd = string(jpasswd)
+	fmt.Println("json")
+	fmt.Println(json)
 	// 从redis中获取用户信息
-	aeswait := redis.AESWaitClient{Feature: feature}
+	aeswait := redis.AESWaitClient{Feature: json.Feature}
 	aes, err := aeswait.ReadAndRemoveFromRedis()
 	if err != nil {
 		Code.SE001(c)
 		return
 	}
 	// 解密id和passwd(先转换成[]byte)
-	idByte, err := security.AesDecrypt([]byte(id), []byte(aes))
+	idByte, err := security.AesDecrypt([]byte(json.ID), []byte(aes))
 	if err != nil {
 		Code.SE002(c)
 		return
 	}
-	passwdByte, err := security.AesDecrypt([]byte(passwd), []byte(aes))
+	passwdByte, err := security.AesDecrypt([]byte(json.Passwd), []byte(aes))
 	if err != nil {
 		Code.SE002(c)
 		return
 	}
+	fmt.Println("id" + string(idByte))
+	fmt.Println("passwd" + string(passwdByte))
 	// 从数据库中获取用户信息
 	mgr := db.AdminMgr(db.GetConn())
 	admin, err := mgr.GetFromAdminID(string(idByte))
@@ -46,6 +67,7 @@ func AdminLogin(c *gin.Context) {
 	token, _ := GenToken(aes)
 	// 返回token
 	c.JSON(200, gin.H{
+		"code":  "SE200",
 		"msg":   "登录成功",
 		"token": token,
 	})
