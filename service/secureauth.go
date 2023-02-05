@@ -25,12 +25,11 @@ func GenToken(aes string) (string, error) {
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
 			NotBefore: time.Now().Unix() - 10,
-			Issuer:    "CSystemServer",
+			Issuer:    "SSIMP",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, c)
-	priv, _ := jwt.ParseRSAPrivateKeyFromPEM(security.SERVER_RSA.PRIVATE_KEY)
-	return token.SignedString(priv)
+	return token.SignedString(security.SERVER_RSA.PRIVATE_KEY_BYTES)
 }
 
 // 解析jwt
@@ -38,7 +37,7 @@ func ParseToken(tokenstr string) (*Claims, error) {
 	// 解析token
 	token, err := jwt.ParseWithClaims(tokenstr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		// 这里的密钥要和生成的密钥一致
-		return security.SERVER_RSA.PUBLIC_KEY, nil
+		return security.SERVER_RSA.PUBLIC_KEY_BYTES, nil
 	})
 	if err != nil {
 		fmt.Println("解析token失败")

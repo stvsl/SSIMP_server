@@ -116,11 +116,11 @@ type Employer struct {
 	Name      string         `gorm:"column:name;type:varchar(10);not null" json:"name"`          // 姓名
 	BirthDay  datatypes.Date `gorm:"column:birth_day;type:date;not null" json:"birthDay"`        // 出生日期
 	EmployDay datatypes.Date `gorm:"column:employ_day;type:date;not null" json:"employDay"`      // 入职日期
-	IDcard    int            `gorm:"column:idcard;type:int(18);not null" json:"idcard"`          // 身份证号
+	IDcard    string         `gorm:"column:idcard;type:varchar(18);not null" json:"idcard"`      // 身份证号
 	Address   string         `gorm:"column:address;type:varchar(40);not null" json:"address"`    // 家庭地址
-	Telephone int            `gorm:"column:telephone;type:int(11);not null" json:"telephone"`    // 联系电话
-	BustPhoto []byte         `gorm:"column:bust_photo;type:blob" json:"bustPhoto"`               // 半身照
-	Avatar    []byte         `gorm:"column:avatar;type:blob" json:"avatar"`                      // 头像
+	Telephone string         `gorm:"column:telephone;type:int(11);not null" json:"telephone"`    // 联系电话
+	BustPhoto string         `gorm:"column:bust_photo;type:varchar(100)" json:"bustPhoto"`       // 半身照
+	Avatar    string         `gorm:"column:avatar;type:varchar(100)" json:"avatar"`              // 头像
 }
 
 // TableName get sql table name.获取数据库表名

@@ -24,8 +24,9 @@ func Start() {
 	 * 加载路由
 	 **********************/
 	// 通信加密相关
-	router.GET("/api/encryption/rsapubkey", Rsapubkey)    // 获取服务端公钥
-	router.POST("/api/encryption/rsatoaes", ClientRsakey) // 获取客户端公钥
-	router.POST("/api/account/admin/login", AdminLogin)   // 管理员登录
+	router.GET("/api/encryption/rsapubkey", Rsapubkey)                        // 获取服务端公钥
+	router.POST("/api/encryption/rsatoaes", ClientRsakey)                     // 获取客户端公钥
+	router.POST("/api/account/admin/login", AdminLogin)                       // 管理员登录
+	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList) // 获取员工信息列表
 	router.Run(":6521")
 }

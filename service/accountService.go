@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/base64"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"stvsljl.com/SSIMP/db"
@@ -29,8 +28,6 @@ func AdminLogin(c *gin.Context) {
 	}
 	json.ID = string(jid)
 	json.Passwd = string(jpasswd)
-	fmt.Println("json")
-	fmt.Println(json)
 	// 从redis中获取用户信息
 	aeswait := redis.AESWaitClient{Feature: json.Feature}
 	aes, err := aeswait.ReadAndRemoveFromRedis()
@@ -49,8 +46,6 @@ func AdminLogin(c *gin.Context) {
 		Code.SE002(c)
 		return
 	}
-	fmt.Println("id" + string(idByte))
-	fmt.Println("passwd" + string(passwdByte))
 	// 从数据库中获取用户信息
 	mgr := db.AdminMgr(db.GetConn())
 	admin, err := mgr.GetFromAdminID(string(idByte))

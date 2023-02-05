@@ -101,7 +101,7 @@ func (Code *Error) SE406(c *gin.Context) {
 }
 
 func (Code *Error) SE407(c *gin.Context) {
-	c.JSON(200, gin.H{
+	c.JSON(302, gin.H{
 		"code": "SE407",
 		"msg":  "客户端请求未授权Token或Token已过期或Token未携带",
 	})
