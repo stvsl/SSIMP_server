@@ -16,8 +16,7 @@ CREATE TABLE `Admin` (
   `idcard` int(18) NOT NULL COMMENT '身份证号',
   `telephone` int(11) NOT NULL COMMENT '联系电话',
   `address` varchar(40) NOT NULL COMMENT '家庭住址',
-  `bust_photo` blob DEFAULT NULL COMMENT '半身照片',
-  `avatar` blob DEFAULT NULL COMMENT '头像',
+  `avatar` varchar(100) DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`adminID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员信息表'
 ******sql******/
@@ -31,8 +30,7 @@ type Admin struct {
 	IDcard       int            `gorm:"column:idcard;type:int(18);not null" json:"idcard"`           // 身份证号
 	Telephone    int            `gorm:"column:telephone;type:int(11);not null" json:"telephone"`     // 联系电话
 	Address      string         `gorm:"column:address;type:varchar(40);not null" json:"address"`     // 家庭住址
-	BustPhoto    []byte         `gorm:"column:bust_photo;type:blob" json:"bustPhoto"`                // 半身照片
-	Avatar       []byte         `gorm:"column:avatar;type:blob" json:"avatar"`                       // 头像
+	Avatar       string         `gorm:"column:avatar;type:carchar(100)" json:"avatar"`               // 头像
 }
 
 // TableName get sql table name.获取数据库表名
@@ -113,16 +111,16 @@ CREATE TABLE `Employer` (
 ******sql******/
 // Employer 员工信息表
 type Employer struct {
-	Employid  string         `gorm:"primaryKey;column:employid;type:char(10);not null" json:"-"` // 员工编号
-	Passwd    string         `gorm:"column:passwd;type:varchar(18);not null" json:"passwd"`      // 登录密码
-	Name      string         `gorm:"column:name;type:varchar(10);not null" json:"name"`          // 姓名
-	BirthDay  datatypes.Date `gorm:"column:birth_day;type:date;not null" json:"birthDay"`        // 出生日期
-	EmployDay datatypes.Date `gorm:"column:employ_day;type:date;not null" json:"employDay"`      // 入职日期
-	IDcard    int            `gorm:"column:idcard;type:int(18);not null" json:"idcard"`          // 身份证号
-	Address   string         `gorm:"column:address;type:varchar(40);not null" json:"address"`    // 家庭地址
-	Telephone int            `gorm:"column:telephone;type:int(11);not null" json:"telephone"`    // 联系电话
-	BustPhoto []byte         `gorm:"column:bust_photo;type:blob" json:"bustPhoto"`               // 半身照
-	Avatar    []byte         `gorm:"column:avatar;type:blob" json:"avatar"`                      // 头像
+	Employid  string         `gorm:"primaryKey;column:employid;type:char(10);not null" json:"employid"` // 员工编号
+	Passwd    string         `gorm:"column:passwd;type:varchar(18);not null" json:"passwd"`             // 登录密码
+	Name      string         `gorm:"column:name;type:varchar(10);not null" json:"name"`                 // 姓名
+	BirthDay  datatypes.Date `gorm:"column:birth_day;type:date;not null" json:"birthDay"`               // 出生日期
+	EmployDay datatypes.Date `gorm:"column:employ_day;type:date;not null" json:"employDay"`             // 入职日期
+	IDcard    string         `gorm:"column:idcard;type:varchar(18);not null" json:"idcard"`             // 身份证号
+	Address   string         `gorm:"column:address;type:varchar(40);not null" json:"address"`           // 家庭地址
+	Telephone string         `gorm:"column:telephone;type:int(11);not null" json:"telephone"`           // 联系电话
+	BustPhoto string         `gorm:"column:bust_photo;type:varchar(100)" json:"bustPhoto"`              // 半身照
+	Avatar    string         `gorm:"column:avatar;type:varchar(100)" json:"avatar"`                     // 头像
 }
 
 // TableName get sql table name.获取数据库表名

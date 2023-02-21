@@ -12,7 +12,7 @@ import (
 // 生成RSA密钥对
 func GenerateRsaKey() (string, string, error) {
 	// 生成私钥
-	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return "", "", err
 	}
@@ -37,7 +37,7 @@ func GenerateRsaKey() (string, string, error) {
 // 生成服务器本地密钥对
 func GenerateLocalRsaKey() {
 	// 生成私钥
-	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return
 	}
@@ -74,8 +74,26 @@ func Encrypt(origData []byte, publickey []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	// 加密
-	return rsa.EncryptPKCS1v15(rand.Reader, pubInterface, origData)
+	ciphertextByte, err := rsa.EncryptPKCS1v15(rand.Reader, pubInterface, origData)
+	if err != nil {
+		ciphertextByte = make([]byte, 0)
+		for i := 0; i < len(origData); i += 245 {
+			var end int
+			if i+245 > len(origData) {
+				end = len(origData)
+			} else {
+				end = i + 245
+			}
+			// 加密
+			ciphertextByteTemp, err := rsa.EncryptPKCS1v15(rand.Reader, pubInterface, origData[i:end])
+			if err != nil {
+				return nil, err
+			}
+			ciphertextByte = append(ciphertextByte, ciphertextByteTemp...)
+		}
+		return ciphertextByte, nil
+	}
+	return ciphertextByte, nil
 }
 
 // 解密
@@ -88,8 +106,32 @@ func Decrypt(ciphertext []byte, privateKey []byte) ([]byte, error) {
 	//解析PKCS1格式的私钥
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		log.Println("!!!")
-		return nil, err
+		log.Println("私钥解析错误")
+		return nil, errors.New("私钥解析错误:" + err.Error())
+	}
+	// 判断数据长度是否超过单个切片的长度
+	if len(ciphertext) > 256 {
+		// 切片解密
+		var result []byte
+		for i := 0; i < len(ciphertext); i += 256 {
+			// 判断切片是否超出长度
+			if i+256 > len(ciphertext) {
+				// 解密
+				decrypted, err := rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext[i:])
+				if err != nil {
+					return nil, err
+				}
+				result = append(result, decrypted...)
+			} else {
+				// 解密
+				decrypted, err := rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext[i:i+256])
+				if err != nil {
+					return nil, err
+				}
+				result = append(result, decrypted...)
+			}
+		}
+		return result, nil
 	}
 	// 解密
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)

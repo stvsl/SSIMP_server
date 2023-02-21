@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
@@ -45,7 +46,7 @@ func (obj *_AdminMgr) Gets() (results []*Admin, err error) {
 	return
 }
 
-////////////////////////////////// gorm replace /////////////////////////////////
+// //////////////////////////////// gorm replace /////////////////////////////////
 func (obj *_AdminMgr) Count(count *int64) (tx *gorm.DB) {
 	return obj.DB.WithContext(obj.ctx).Model(Admin{}).Count(count)
 }
