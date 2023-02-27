@@ -39,31 +39,37 @@ func (m *Admin) TableName() string {
 }
 
 /******sql******
+-- SSIMP.Article definition
 CREATE TABLE `Article` (
-  `aid` int(20) NOT NULL COMMENT '文章编号',
+  `aid` int(12) NOT NULL COMMENT '文章编号',
+  `coverimg` varchar(150) NOT NULL COMMENT '封面图片',
+  `contentimg` varchar(150) NOT NULL COMMENT '内容大图',
   `title` varchar(50) NOT NULL COMMENT '标题',
+  `introduction` varchar(200) NOT NULL COMMENT '简介',
   `text` longtext NOT NULL COMMENT '正文',
   `writetime` datetime NOT NULL COMMENT '发表日期',
   `updatetime` datetime NOT NULL COMMENT '更新日期',
   `author` varchar(10) NOT NULL COMMENT '作者',
-  `pageviews` bigint(20) unsigned NOT NULL COMMENT '浏览量',
+  `pageviews` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '浏览量',
   `status` int(1) NOT NULL COMMENT '文章状态',
   PRIMARY KEY (`aid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站文章相关数据'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站文章相关数据';
 ******sql******/
-// Article 网站文章相关数据
+// Article  网站文章相关数据
 type Article struct {
-	Aid        int       `gorm:"primaryKey;column:aid;type:int(20);not null" json:"-"`                // 文章编号
-	Title      string    `gorm:"column:title;type:varchar(50);not null" json:"title"`                 // 标题
-	Text       string    `gorm:"column:text;type:longtext;not null" json:"text"`                      // 正文
-	Writetime  time.Time `gorm:"column:writetime;type:datetime;not null" json:"writetime"`            // 发表日期
-	Updatetime time.Time `gorm:"column:updatetime;type:datetime;not null" json:"updatetime"`          // 更新日期
-	Author     string    `gorm:"column:author;type:varchar(10);not null" json:"author"`               // 作者
-	Pageviews  uint64    `gorm:"column:pageviews;type:bigint(20) unsigned;not null" json:"pageviews"` // 浏览量
-	Status     int       `gorm:"column:status;type:int(1);not null" json:"status"`                    // 文章状态
+	Aid          int       `gorm:"column:aid;primary_key" db:"aid" json:"aid" form:"aid"`                         //  文章编号
+	Coverimg     string    `gorm:"column:coverimg" db:"coverimg" json:"coverimg" form:"coverimg"`                 //  封面图片
+	Contentimg   string    `gorm:"column:contentimg" db:"contentimg" json:"contentimg" form:"contentimg"`         //  内容大图
+	Title        string    `gorm:"column:title" db:"title" json:"title" form:"title"`                             //  标题
+	Introduction string    `gorm:"column:introduction" db:"introduction" json:"introduction" form:"introduction"` //  简介
+	Text         string    `gorm:"column:text" db:"text" json:"text" form:"text"`                                 //  正文
+	Writetime    time.Time `gorm:"column:writetime" db:"writetime" json:"writetime" form:"writetime"`             //  发表日期
+	Updatetime   time.Time `gorm:"column:updatetime" db:"updatetime" json:"updatetime" form:"updatetime"`         //  更新日期
+	Author       string    `gorm:"column:author" db:"author" json:"author" form:"author"`                         //  作者
+	Pageviews    int64     `gorm:"column:pageviews" db:"pageviews" json:"pageviews" form:"pageviews"`             //  浏览量
+	Status       int64     `gorm:"column:status" db:"status" json:"status" form:"status"`                         //  文章状态
 }
 
-// TableName get sql table name.获取数据库表名
 func (m *Article) TableName() string {
 	return "Article"
 }
