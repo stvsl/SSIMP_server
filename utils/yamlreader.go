@@ -26,6 +26,15 @@ type SecurityConfig struct {
 	RSAUpdateLifecycle int `yaml:"rsaUpdateLifecycle"` // RSA密钥更新周期（单位：分钟）
 }
 
+type CosConfig struct {
+	Bucket    string `yaml:"cosBucket"`
+	Region    string `yaml:"cosRegion"`
+	Appid     string `yaml:"cosAppid"`
+	SecretId  string `yaml:"cosSecretId"`
+	SecretKey string `yaml:"cosSecretKey"`
+	Domain    string `yaml:"cosDomain"`
+}
+
 func GetSqlConnConfigStr() string {
 	var sqlConfig SqlConfig
 	yamlFile, err := os.ReadFile("./config.yaml")
@@ -75,4 +84,14 @@ func GetLogConfig() *Logger {
 	}
 	yaml.Unmarshal(yamlFile, &logConfig)
 	return &logConfig
+}
+
+func GetCosConfig() *CosConfig {
+	var cosConfig CosConfig
+	yamlFile, err := os.ReadFile("./config.yaml")
+	if err != nil {
+		panic(err)
+	}
+	yaml.Unmarshal(yamlFile, &cosConfig)
+	return &cosConfig
 }

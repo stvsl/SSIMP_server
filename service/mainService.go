@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/gin-gonic/gin"
+	"stvsljl.com/SSIMP/cos"
 	"stvsljl.com/SSIMP/db"
 	"stvsljl.com/SSIMP/redis"
 	"stvsljl.com/SSIMP/security"
@@ -17,6 +18,8 @@ func Start() {
 	utils.Log.Init()
 	// redis初始化
 	redis.Init()
+	// 对象存储初始化
+	cos.Init()
 	// 服务器服务启动
 	router := gin.Default()
 	router.SetTrustedProxies(nil)

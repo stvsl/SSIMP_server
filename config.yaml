@@ -12,3 +12,9 @@ rsaUpdateLifecycle: 120 # rsa更新周期，单位分钟
 logFormat: text # 日志格式
 logDir: ./log # 日志目录
 logKeepDays: 7 # 日志保留天数
+cosBucket: ssimp # cos桶名称
+cosRegion: ap-beijing # cos地域
+cosAppid:  1316672330 # cos appid
+cosSecretId: AKIDb6eSAqBOVRCRcgjHl6HG2a1IOK6h6IpB # cosSecretId
+cosSecretKey: KYaatzxjKm9i8PacTAetujLky3oPnxyp  # cosSecretKey
+cosDomain: https://ssimp-1316672330.cos.ap-beijing.myqcloud.com # cos域名

@@ -53,12 +53,15 @@ func ArticleDetail(c *gin.Context) {
 func ArticleAdd(c *gin.Context) {
 	article := db.Article{}
 	c.Bind(&article)
-	// 保存到数据库
+	fmt.Println(string(func() []byte {
+		json, _ := json.Marshal(article)
+		return json
+	}()))
 	article.Writetime = time.Now()
 	article.Updatetime = time.Now()
 	article.Pageviews = 0
 	db := db.GetConn()
-	db.Select("aid").Create(&article).Scan(&article)
+	db.Create(&article).Select("aid").Scan(&article)
 	// 判断aid是否非空
 	if article.Aid == 0 {
 		Code.SE602(c)
