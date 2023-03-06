@@ -39,17 +39,18 @@ func Start() {
 	 * 加载路由
 	 **********************/
 	// 通信加密相关
-	router.GET("/api/encryption/rsapubkey", Rsapubkey)                            // 获取服务端公钥
-	router.POST("/api/encryption/rsatoaes", ClientRsakey)                         // 获取客户端公钥
-	router.POST("/api/account/admin/login", AdminLogin)                           // 管理员登录
-	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList)     // 获取员工信息列表
-	router.POST("/api/account/employee/add", AuthMiddleware(), EmployeeAdd)       // 添加员工信息
-	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate) // 更新员工信息
-	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete) // 删除员工信息
-	router.POST("/api/article/list", ArticleList)                                 // 获取文章列表
-	router.POST("/api/article/detail", ArticleDetail)                             // 获取文章详情
-	router.POST("/api/article/add", AuthMiddleware(), ArticleAdd)                 // 添加文章
-	router.POST("/api/article/update", AuthMiddleware(), ArticleUpdate)           // 更新文章
-	router.POST("/api/article/delete", AuthMiddleware(), ArticleDelete)           // 删除文章
+	router.GET("/api/encryption/rsapubkey", Rsapubkey)                             // 获取服务端公钥
+	router.POST("/api/encryption/rsatoaes", ClientRsakey)                          // 获取客户端公钥
+	router.POST("/api/account/admin/login", AdminLogin)                            // 管理员登录
+	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList)      // 获取员工信息列表
+	router.POST("/api/account/employee/add", AuthMiddleware(), EmployeeAdd)        // 添加员工信息
+	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate)  // 更新员工信息
+	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete)  // 删除员工信息
+	router.POST("/api/article/list", ArticleList)                                  // 获取文章列表
+	router.POST("/api/article/detail", ArticleDetail)                              // 获取文章详情
+	router.POST("/api/article/add", AuthMiddleware(), ArticleAdd)                  // 添加文章
+	router.POST("/api/article/update", AuthMiddleware(), ArticleUpdate)            // 更新文章
+	router.GET("/api/article/tonocarousel", AuthMiddleware(), ArticleToNoCarousel) // 将文章转为非轮播图
+	router.GET("/api/article/delete", AuthMiddleware(), ArticleDelete)             // 删除文章
 	router.Run(":6521")
 }

@@ -31,6 +31,7 @@ type Error func(c *gin.Context)
     SE601 SQL数据库繁忙
     SE602 SQL数据库无法完成当前请求
     SE610 Redis数据库异常
+    SE620 COS存储异常
 */
 var Code *Error
 
@@ -58,6 +59,7 @@ func (Code *Error) SE400(c *gin.Context) {
 	})
 }
 
+// 客户端发来的数据内容不正确
 func (Code *Error) SE401(c *gin.Context) {
 	c.JSON(401, gin.H{
 		"code": "SE401",
@@ -65,6 +67,7 @@ func (Code *Error) SE401(c *gin.Context) {
 	})
 }
 
+// 客户端数据无法解析
 func (Code *Error) SE402(c *gin.Context) {
 	c.JSON(402, gin.H{
 		"code": "SE402",
@@ -72,6 +75,7 @@ func (Code *Error) SE402(c *gin.Context) {
 	})
 }
 
+// 客户端流量异常
 func (Code *Error) SE403(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE403",
@@ -79,6 +83,7 @@ func (Code *Error) SE403(c *gin.Context) {
 	})
 }
 
+// 客户端请求的数据未找到
 func (Code *Error) SE404(c *gin.Context) {
 	c.JSON(404, gin.H{
 		"code": "SE404",
@@ -86,6 +91,7 @@ func (Code *Error) SE404(c *gin.Context) {
 	})
 }
 
+// 客户端无权请求此数据
 func (Code *Error) SE405(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE405",
@@ -93,6 +99,7 @@ func (Code *Error) SE405(c *gin.Context) {
 	})
 }
 
+// 客户端身份验证失败
 func (Code *Error) SE406(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE406",
@@ -100,6 +107,7 @@ func (Code *Error) SE406(c *gin.Context) {
 	})
 }
 
+// 客户端请求未授权Token或Token已过期或Token未携带
 func (Code *Error) SE407(c *gin.Context) {
 	c.JSON(302, gin.H{
 		"code": "SE407",
@@ -107,6 +115,7 @@ func (Code *Error) SE407(c *gin.Context) {
 	})
 }
 
+// 服务器内部报错
 func (Code *Error) SE500(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE500",
@@ -114,6 +123,7 @@ func (Code *Error) SE500(c *gin.Context) {
 	})
 }
 
+// 服务器不支持请求的功能，无法完成请求
 func (Code *Error) SE501(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE501",
@@ -121,6 +131,7 @@ func (Code *Error) SE501(c *gin.Context) {
 	})
 }
 
+// 服务器接收的数据版本为老版本，现已不支持
 func (Code *Error) SE505(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE505",
@@ -128,6 +139,7 @@ func (Code *Error) SE505(c *gin.Context) {
 	})
 }
 
+// 服务器已将请求拒绝
 func (Code *Error) SE506(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE506",
@@ -135,6 +147,7 @@ func (Code *Error) SE506(c *gin.Context) {
 	})
 }
 
+// SQL数据库未知异常
 func (Code *Error) SE600(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE600",
@@ -142,6 +155,7 @@ func (Code *Error) SE600(c *gin.Context) {
 	})
 }
 
+// SQL数据库繁忙
 func (Code *Error) SE601(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE601",
@@ -149,6 +163,7 @@ func (Code *Error) SE601(c *gin.Context) {
 	})
 }
 
+// SQL数据库无法完成当前请求
 func (Code *Error) SE602(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE602",
@@ -156,9 +171,18 @@ func (Code *Error) SE602(c *gin.Context) {
 	})
 }
 
+// Redis数据库异常
 func (Code *Error) SE610(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": "SE610",
 		"msg":  "Redis数据库异常",
+	})
+}
+
+// COS对象存储异常
+func (Code *Error) SE620(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"code": "SE620",
+		"msg":  "COS对象存储异常",
 	})
 }
