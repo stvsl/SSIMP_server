@@ -52,5 +52,6 @@ func Start() {
 	router.POST("/api/article/update", AuthMiddleware(), ArticleUpdate)            // 更新文章
 	router.GET("/api/article/tonocarousel", AuthMiddleware(), ArticleToNoCarousel) // 将文章转为非轮播图
 	router.GET("/api/article/delete", AuthMiddleware(), ArticleDelete)             // 删除文章
+	router.POST("/api/taskset/list", TaskSetList)                                  // 获取任务集列表
 	router.Run(":6521")
 }
