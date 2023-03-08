@@ -17,7 +17,7 @@ func TaskSetList(c *gin.Context) {
 		Code.SE602(c)
 		return
 	}
-	fmt.Println(taskset)
+	fmt.Println("tasksetjson" + string(tasksetjson))
 	c.JSON(200, gin.H{
 		"code": "SE200",
 		"msg":  "success",

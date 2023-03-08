@@ -26,7 +26,7 @@ func ArticleList(c *gin.Context) {
 	ArticleList := []Article{}
 	db := db.GetConn()
 	db.Table("Article").Select("aid", "title", "coverimg", "updatetime", "pageviews", "status", "introduction").Find(&ArticleList)
-	fmt.Println(ArticleList)
+	// fmt.Println(ArticleList)
 	json, _ := json.Marshal(ArticleList)
 	c.JSON(200, gin.H{
 		"code": "SE200",
