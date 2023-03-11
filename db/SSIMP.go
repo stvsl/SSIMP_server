@@ -243,14 +243,15 @@ CREATE TABLE `TaskSet` (
 ******sql******/
 // TaskSet 任务设置表
 type TaskSet struct {
-	Tid     int     `gorm:"primaryKey;column:tid;type:int(4);not null;autoIncrement" json:"tid"` // 任务ID
-	Name    string  `gorm:"column:name;type:varchar(100);not null" json:"name"`                  // 任务名称
-	Content string  `gorm:"column:content;type:varchar(100);not null" json:"content"`            // 任务内容
-	Area    string  `gorm:"column:area;type:varchar(100);not null" json:"area"`                  // 区域
-	Poslo   float64 `gorm:"column:poslo;type:float;not null" json:"poslo"`                       // 经度
-	Posli   float64 `gorm:"column:posli;type:float;not null" json:"posli"`                       // 纬度
-	Cycle   int     `gorm:"column:cycle;type:int(11);not null;default:7" json:"cycle"`           // 周期(每周完成多少次)
-	State   int     `gorm:"column:state;type:int(1);not null;default:1" json:"state"`            // 状态
+	Tid      int     `gorm:"primaryKey;column:tid;type:int(4);not null;autoIncrement" json:"tid"` // 任务ID
+	Name     string  `gorm:"column:name;type:varchar(100);not null" json:"name"`                  // 任务名称
+	Content  string  `gorm:"column:content;type:varchar(100);not null" json:"content"`            // 任务内容
+	Area     string  `gorm:"column:area;type:varchar(100);not null" json:"area"`                  // 区域
+	Poslo    float64 `gorm:"column:poslo;type:float;not null" json:"poslo"`                       // 经度
+	Posli    float64 `gorm:"column:posli;type:float;not null" json:"posli"`                       // 纬度
+	Cycle    int     `gorm:"column:cycle;type:int(11);not null;default:7" json:"cycle"`           // 周期(每周完成多少次)
+	State    int     `gorm:"column:state;type:int(1);not null;default:1" json:"state"`            // 状态
+	Duration int     `gorm:"column:duration;type:int(11);not null;default:1" json:"duration"`     // 时长
 }
 
 // TableName get sql table name.获取数据库表名

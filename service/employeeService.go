@@ -11,6 +11,10 @@ import (
 func EmployeeList(c *gin.Context) {
 	mgr := db.EmployerMgr(db.GetConn())
 	employee, err := mgr.Gets()
+	if err != nil {
+		Code.SE601(c)
+		return
+	}
 	employeejson, err := json.Marshal(employee)
 	fmt.Println(string(employeejson))
 	if err != nil {
