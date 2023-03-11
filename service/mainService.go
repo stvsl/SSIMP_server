@@ -55,6 +55,6 @@ func Start() {
 	router.POST("/api/taskset/list", TaskSetList)                                  // 获取任务集列表
 	router.POST("/api/taskset/add", AuthMiddleware(), TaskSetAdd)                  // 添加任务集
 	router.POST("/api/taskset/update", AuthMiddleware(), TaskSetUpdate)            // 更新任务集
-	router.POST("/api/taskset/delete", AuthMiddleware(), TaskSetDelete)            // 删除任务集
+	router.GET("/api/taskset/delete", AuthMiddleware(), TaskSetDelete)             // 删除任务集
 	router.Run(":6521")
 }

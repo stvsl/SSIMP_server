@@ -22,7 +22,6 @@ func TaskSetList(c *gin.Context) {
 		Code.SE602(c)
 		return
 	}
-	fmt.Println("tasksetjson" + string(tasksetjson))
 	c.JSON(200, gin.H{
 		"code": "SE200",
 		"msg":  "success",
@@ -72,13 +71,15 @@ func TaskSetUpdate(c *gin.Context) {
 
 func TaskSetDelete(c *gin.Context) {
 
-	tid, err := strconv.Atoi(c.Param("tid"))
+	tid := c.Query("tid")
+	fmt.Println(tid)
+	tidint, err := strconv.Atoi(tid)
 	if err != nil {
 		Code.SE400(c)
 		return
 	}
 	tsmgr := db.TaskSetMgr(db.GetConn())
-	tsmgr.Delete(db.TaskSet{Tid: tid})
+	tsmgr.Delete(db.TaskSet{Tid: tidint})
 	c.JSON(200, gin.H{
 		"code": "SE200",
 		"msg":  "success",
