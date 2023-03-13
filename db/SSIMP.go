@@ -197,9 +197,10 @@ CREATE TABLE `Task` (
 ******sql******/
 // Task 任务表
 type Task struct {
-	Employid string   `gorm:"primaryKey;column:employid;type:char(10);not null" json:"-"`      // 员工编号
+	Employid string   `gorm:"primaryKey;column:employid;type:char(10);not null" json:"eid"`    // 员工编号
 	Employer Employer `gorm:"joinForeignKey:employid;foreignKey:employid" json:"employerList"` // 员工信息表
-	Task     string   `gorm:"column:task;type:longtext;not null" json:"task"`                  // 任务
+	Tid      int      `gorm:"column:tid;type:int;not null" json:"task"`                        // 任务
+	TaskSet  TaskSet  `gorm:"foreignKey:employid" json:"taskSetList"`                          // 任务集表
 }
 
 // TableName get sql table name.获取数据库表名
