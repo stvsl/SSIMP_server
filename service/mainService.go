@@ -47,6 +47,9 @@ func Start() {
 	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate)  // 更新员工信息
 	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete)  // 删除员工信息
 	router.POST("/api/article/list", ArticleList)                                  // 获取文章列表
+	router.POST("/api/article/recommendlist", ArticleRecommendList)                // 获取推荐文章列表
+	router.POST("/api/article/carousel", ArticleCarousel)                          // 获取轮播图文章列表
+	router.POST("/api/article/publiclist", ArticlePublicList)                      // 获取公开文章列表
 	router.POST("/api/article/detail", ArticleDetail)                              // 获取文章详情
 	router.POST("/api/article/add", AuthMiddleware(), ArticleAdd)                  // 添加文章
 	router.POST("/api/article/update", AuthMiddleware(), ArticleUpdate)            // 更新文章

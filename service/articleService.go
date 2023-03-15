@@ -34,6 +34,77 @@ func ArticleList(c *gin.Context) {
 	})
 }
 
+func ArticleCarousel(c *gin.Context) {
+	type Article struct {
+		Aid          int       `gorm:"column:aid;primary_key" db:"aid" json:"aid" form:"aid"`                         //  文章编号
+		Coverimg     string    `gorm:"column:coverimg" db:"coverimg" json:"coverimg" form:"coverimg"`                 //  封面图片
+		Title        string    `gorm:"column:title" db:"title" json:"title" form:"title"`                             //  标题
+		Introduction string    `gorm:"column:introduction" db:"introduction" json:"introduction" form:"introduction"` //  简介
+		Updatetime   time.Time `gorm:"column:updatetime" db:"updatetime" json:"updatetime" form:"updatetime"`         //  更新日期
+		Pageviews    int64     `gorm:"column:pageviews" db:"pageviews" json:"pageviews" form:"pageviews"`             //  浏览量
+		Status       int64     `gorm:"column:status" db:"status" json:"status" form:"status"`                         //  文章状态
+	}
+	ArticleList := []Article{}
+	db := db.GetConn()
+	db.Table("Article").Select("aid", "title", "coverimg", "updatetime", "pageviews", "status", "introduction").Where("status = ?", 2).Find(&ArticleList)
+	// fmt.Println(ArticleList)
+	json, _ := json.Marshal(ArticleList)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"data": string(json),
+	})
+}
+
+func ArticleRecommendList(c *gin.Context) {
+	// 从post请求中获取参数
+	var aidstruct struct {
+		Name string `json:"name" form:"name"`
+	}
+	if err := c.Bind(&aidstruct); err != nil {
+		Code.SE400(c)
+		return
+	}
+	type Article struct {
+		Aid          int       `gorm:"column:aid;primary_key" db:"aid" json:"aid" form:"aid"`                         //  文章编号
+		Coverimg     string    `gorm:"column:coverimg" db:"coverimg" json:"coverimg" form:"coverimg"`                 //  封面图片
+		Title        string    `gorm:"column:title" db:"title" json:"title" form:"title"`                             //  标题
+		Introduction string    `gorm:"column:introduction" db:"introduction" json:"introduction" form:"introduction"` //  简介
+		Updatetime   time.Time `gorm:"column:updatetime" db:"updatetime" json:"updatetime" form:"updatetime"`         //  更新日期
+		Pageviews    int64     `gorm:"column:pageviews" db:"pageviews" json:"pageviews" form:"pageviews"`             //  浏览量
+		Status       int64     `gorm:"column:status" db:"status" json:"status" form:"status"`                         //  文章状态
+	}
+	ArticleList := []Article{}
+	db := db.GetConn()
+	db.Table("Article").Select("aid", "title", "coverimg", "updatetime", "pageviews", "status", "introduction").Where("status = ?", 2).Where("title like ?", "%"+aidstruct.Name+"%").Find(&ArticleList)
+	// fmt.Println(ArticleList)
+	json, _ := json.Marshal(ArticleList)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"data": string(json),
+	})
+}
+
+func ArticlePublicList(c *gin.Context) {
+	type Article struct {
+		Aid          int       `gorm:"column:aid;primary_key" db:"aid" json:"aid" form:"aid"`                         //  文章编号
+		Coverimg     string    `gorm:"column:coverimg" db:"coverimg" json:"coverimg" form:"coverimg"`                 //  封面图片
+		Title        string    `gorm:"column:title" db:"title" json:"title" form:"title"`                             //  标题
+		Introduction string    `gorm:"column:introduction" db:"introduction" json:"introduction" form:"introduction"` //  简介
+		Updatetime   time.Time `gorm:"column:updatetime" db:"updatetime" json:"updatetime" form:"updatetime"`         //  更新日期
+		Pageviews    int64     `gorm:"column:pageviews" db:"pageviews" json:"pageviews" form:"pageviews"`             //  浏览量
+		Status       int64     `gorm:"column:status" db:"status" json:"status" form:"status"`                         //  文章状态
+	}
+	ArticleList := []Article{}
+	db := db.GetConn()
+	db.Table("Article").Select("aid", "title", "coverimg", "updatetime", "pageviews", "status", "introduction").Where("status != ?", 3).Find(&ArticleList)
+	// fmt.Println(ArticleList)
+	json, _ := json.Marshal(ArticleList)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"data": string(json),
+	})
+}
+
 func ArticleDetail(c *gin.Context) {
 	var aidstruct struct {
 		Aid string `json:"aid" form:"aid"`
