@@ -109,7 +109,10 @@ func ArticleDetail(c *gin.Context) {
 	var aidstruct struct {
 		Aid string `json:"aid" form:"aid"`
 	}
-	c.Bind(&aidstruct)
+	if err := c.Bind(&aidstruct); err != nil {
+		Code.SE400(c)
+		return
+	}
 	articlemgr := db.ArticleMgr(db.GetConn())
 	var aid int
 	fmt.Sscan(aidstruct.Aid, &aid)

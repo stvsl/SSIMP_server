@@ -16,7 +16,7 @@ func EmployeeList(c *gin.Context) {
 		return
 	}
 	employeejson, err := json.Marshal(employee)
-	fmt.Println(string(employeejson))
+	// fmt.Println(string(employeejson))
 	if err != nil {
 		Code.SE602(c)
 		return
