@@ -129,6 +129,24 @@ func ArticleDetail(c *gin.Context) {
 	})
 }
 
+func ArticleSearch(c *gin.Context) {
+	var namestruct struct {
+		Name string `json:"name" form:"name"`
+	}
+	if err := c.Bind(&namestruct); err != nil {
+		Code.SE400(c)
+		return
+	}
+	dbcoon := db.GetConn()
+	articles := []db.Article{}
+	dbcoon.Exec("select * from Article where title like ?", "%"+namestruct.Name+"%").Scan(articles)
+	json, _ := json.Marshal(articles)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"data": string(json),
+	})
+}
+
 func ArticleAdd(c *gin.Context) {
 	article := db.Article{}
 	c.Bind(&article)

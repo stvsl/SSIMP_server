@@ -37,11 +37,7 @@ func (obj *_TaskMgr) Reset() *_TaskMgr {
 // Gets 获取批量结果
 func (obj *_TaskMgr) Gets() (results []*Task, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Find(&results).Error
-	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {
-			// TODO
-		}
-	}
+
 	return
 }
 
@@ -66,18 +62,15 @@ func (obj *_TaskMgr) WithTask(task string) Option {
 
 // GetByOption 功能选项模式获取
 func (obj *_TaskMgr) GetByOption(opts ...Option) (result Task, err error) {
-	options := options{
-		query: make(map[string]interface{}, len(opts)),
+	var results []*Task
+	if results, err = obj.GetByOptions(opts...); err != nil {
+		return
 	}
-	for _, o := range opts {
-		o.apply(&options)
+	if len(results) == 0 {
+		err = gorm.ErrRecordNotFound
+	} else {
+		result = *results[0]
 	}
-
-	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query).Find(&result).Error
-	if err == nil && obj.isRelated {
-		// TODO
-	}
-
 	return
 }
 
@@ -89,96 +82,37 @@ func (obj *_TaskMgr) GetByOptions(opts ...Option) (results []*Task, err error) {
 	for _, o := range opts {
 		o.apply(&options)
 	}
-
 	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query).Find(&results).Error
-	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {
-			// TODO
-		}
-	}
 	return
 }
 
 // SelectPage 分页查询
-func (obj *_TaskMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
+func (obj *_TaskMgr) SelectPage(pageSize, pageIndex int, opts ...Option) (total int64, results []*Task, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
 	for _, o := range opts {
 		o.apply(&options)
 	}
-	resultPage = page
-	results := make([]Task, 0)
-	var count int64 // 统计总的记录数
-	query := obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query)
-	query.Count(&count)
-	resultPage.SetTotal(count)
-	if len(page.GetOrederItemsString()) > 0 {
-		query = query.Order(page.GetOrederItemsString())
+	db := obj.DB.WithContext(obj.ctx).Model(Task{}).Where(options.query)
+	err = db.Count(&total).Error
+	if err != nil {
+		return
 	}
-	err = query.Limit(int(page.GetSize())).Offset(int(page.Offset())).Find(&results).Error
-	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {
-			// TODO
-		}
-	}
-	resultPage.SetRecords(results)
+	err = db.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&results).Error
 	return
 }
 
 //////////////////////////enume case ////////////////////////////////////////////
 
 // GetFromEmployid 通过employid获取内容 员工编号
-func (obj *_TaskMgr) GetFromEmployid(employid string) (result Task, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`employid` = ?", employid).Find(&result).Error
-	if err == nil && obj.isRelated {
-		// TODO
-	}
-
+func (obj *_TaskMgr) GetFromEmployid(employid string) (results []*Task, err error) {
+	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("employid = ?", employid).Find(&results).Error
 	return
 }
 
-// GetBatchFromEmployid 批量查找 员工编号
+// GetBatchFromEmployid 批量唯一主键查找 员工编号
 func (obj *_TaskMgr) GetBatchFromEmployid(employids []string) (results []*Task, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`employid` IN (?)", employids).Find(&results).Error
-	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {
-			// TODO
-		}
-	}
-	return
-}
-
-// GetFromTask 通过task获取内容 任务
-func (obj *_TaskMgr) GetFromTask(task string) (results []*Task, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`task` = ?", task).Find(&results).Error
-	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {
-			// TODO
-		}
-	}
-	return
-}
-
-// GetBatchFromTask 批量查找 任务
-func (obj *_TaskMgr) GetBatchFromTask(tasks []string) (results []*Task, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`task` IN (?)", tasks).Find(&results).Error
-	if err == nil && obj.isRelated {
-		for i := 0; i < len(results); i++ {
-			// TODO
-		}
-	}
-	return
-}
-
-//////////////////////////primary index case ////////////////////////////////////////////
-
-// FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *_TaskMgr) FetchByPrimaryKey(employid string) (result Task, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("`employid` = ?", employid).Find(&result).Error
-	if err == nil && obj.isRelated {
-		// TODO
-	}
-
+	err = obj.DB.WithContext(obj.ctx).Model(Task{}).Where("employid IN (?)", employids).Find(&results).Error
 	return
 }
