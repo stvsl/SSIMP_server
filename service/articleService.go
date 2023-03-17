@@ -137,9 +137,20 @@ func ArticleSearch(c *gin.Context) {
 		Code.SE400(c)
 		return
 	}
+	namestruct.Name = "%" + namestruct.Name + "%" // 模糊查询
 	dbcoon := db.GetConn()
-	articles := []db.Article{}
-	dbcoon.Exec("select * from Article where title like ?", "%"+namestruct.Name+"%").Scan(articles)
+	type Article struct {
+		Aid          int       `gorm:"column:aid;primary_key" db:"aid" json:"aid" form:"aid"`                         //  文章编号
+		Coverimg     string    `gorm:"column:coverimg" db:"coverimg" json:"coverimg" form:"coverimg"`                 //  封面图片
+		Title        string    `gorm:"column:title" db:"title" json:"title" form:"title"`                             //  标题
+		Introduction string    `gorm:"column:introduction" db:"introduction" json:"introduction" form:"introduction"` //  简介
+		Updatetime   time.Time `gorm:"column:updatetime" db:"updatetime" json:"updatetime" form:"updatetime"`         //  更新日期
+		Pageviews    int64     `gorm:"column:pageviews" db:"pageviews" json:"pageviews" form:"pageviews"`             //  浏览量
+		Status       int64     `gorm:"column:status" db:"status" json:"status" form:"status"`                         //  文章状态
+	}
+	articles := []Article{}
+	// SELECT title FROM `Article` WHERE `title` LIKE '%%';改写成
+	dbcoon.Model(&db.Article{}).Where("title LIKE ?", namestruct.Name).Find(&articles)
 	json, _ := json.Marshal(articles)
 	c.JSON(200, gin.H{
 		"code": "SE200",
