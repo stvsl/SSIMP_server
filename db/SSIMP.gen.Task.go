@@ -55,9 +55,9 @@ func (obj *_TaskMgr) WithEmployid(employid string) Option {
 	return optionFunc(func(o *options) { o.query["employid"] = employid })
 }
 
-// WithTask task获取 任务
-func (obj *_TaskMgr) WithTask(task string) Option {
-	return optionFunc(func(o *options) { o.query["task"] = task })
+// WithTid task获取 任务
+func (obj *_TaskMgr) WithTid(tid string) Option {
+	return optionFunc(func(o *options) { o.query["tid"] = tid })
 }
 
 // GetByOption 功能选项模式获取

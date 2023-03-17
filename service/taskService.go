@@ -31,3 +31,39 @@ func EmployerTaskList(c *gin.Context) {
 		"data": string(taskslist),
 	})
 }
+
+func EmployerTaskAdd(c *gin.Context) {
+	task := db.Task{}
+	err := c.BindJSON(&task)
+	if err != nil {
+		Code.SE400(c)
+		return
+	}
+	db := db.GetConn()
+	db.Create(&task).Select("tid").Scan(&task)
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+
+}
+
+func EmployerTaskDelete(c *gin.Context) {
+	tid := c.Query("tid")
+	taskmgr := db.TaskMgr(db.GetConn())
+	task, err := taskmgr.GetByOptions(taskmgr.WithTid(tid))
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	db := db.GetConn()
+	db.Delete(&task)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}

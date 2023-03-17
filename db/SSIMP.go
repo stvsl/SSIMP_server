@@ -198,8 +198,7 @@ CREATE TABLE `Task` (
 // Task 任务表
 type Task struct {
 	Employid string `gorm:"primaryKey;column:employid;type:char(10);not null" json:"eid"` // 员工编号
-
-	Tid int `gorm:"column:tid;type:int;not null" json:"tid"` // 任务
+	Tid      int    `gorm:"column:tid;type:int;not null" json:"tid"`                      // 任务
 }
 
 // TableName get sql table name.获取数据库表名
