@@ -40,8 +40,7 @@ func EmployerTaskAdd(c *gin.Context) {
 		return
 	}
 	db := db.GetConn()
-	db.Create(&task).Select("tid").Scan(&task)
-	if err != nil {
+	if err := db.Create(&task).Scan(&task).Error; err != nil {
 		Code.SE602(c)
 		return
 	}
@@ -53,15 +52,17 @@ func EmployerTaskAdd(c *gin.Context) {
 }
 
 func EmployerTaskDelete(c *gin.Context) {
-	tid := c.Query("tid")
-	taskmgr := db.TaskMgr(db.GetConn())
-	task, err := taskmgr.GetByOptions(taskmgr.WithTid(tid))
+	task := db.Task{}
+	err := c.BindJSON(&task)
 	if err != nil {
-		Code.SE602(c)
+		Code.SE400(c)
 		return
 	}
 	db := db.GetConn()
-	db.Delete(&task)
+	if err = db.Delete(&task).Error; err != nil {
+		Code.SE602(c)
+		return
+	}
 	c.JSON(200, gin.H{
 		"code": "SE200",
 		"msg":  "success",
