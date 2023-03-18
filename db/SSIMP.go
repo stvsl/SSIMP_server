@@ -197,9 +197,8 @@ CREATE TABLE `Task` (
 ******sql******/
 // Task 任务表
 type Task struct {
-	Employid string   `gorm:"primaryKey;column:employid;type:char(10);not null" json:"-"`      // 员工编号
-	Employer Employer `gorm:"joinForeignKey:employid;foreignKey:employid" json:"employerList"` // 员工信息表
-	Task     string   `gorm:"column:task;type:longtext;not null" json:"task"`                  // 任务
+	Employid string `gorm:"primaryKey;column:employid;type:char(10);not null" json:"eid"` // 员工编号
+	Tid      int    `gorm:"column:tid;type:int;not null" json:"tid"`                      // 任务
 }
 
 // TableName get sql table name.获取数据库表名
@@ -226,4 +225,35 @@ type Taveler struct {
 // TableName get sql table name.获取数据库表名
 func (m *Taveler) TableName() string {
 	return "Taveler"
+}
+
+/******sql******
+CREATE TABLE `TaskSet` (
+  `tid` int(11) NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+  `name` varchar(100) NOT NULL COMMENT '任务名称',
+  `content` varchar(100) NOT NULL COMMENT '任务内容',
+  `area` varchar(100) NOT NULL COMMENT '区域',
+  `poslo` float NOT NULL COMMENT '经度',
+  `posli` float NOT NULL COMMENT '纬度',
+  `cycle` int(11) NOT NULL DEFAULT 7 COMMENT '周期(每周完成多少次)',
+  PRIMARY KEY (`tid`),
+  UNIQUE KEY `NewTable_tid_IDX` (`tid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+******sql******/
+// TaskSet 任务设置表
+type TaskSet struct {
+	Tid      int     `gorm:"primaryKey;column:tid;type:int(4);not null;autoIncrement" json:"tid"` // 任务ID
+	Name     string  `gorm:"column:name;type:varchar(100);not null" json:"name"`                  // 任务名称
+	Content  string  `gorm:"column:content;type:varchar(100);not null" json:"content"`            // 任务内容
+	Area     string  `gorm:"column:area;type:varchar(100);not null" json:"area"`                  // 区域
+	Poslo    float64 `gorm:"column:poslo;type:float;not null" json:"poslo"`                       // 经度
+	Posli    float64 `gorm:"column:posli;type:float;not null" json:"posli"`                       // 纬度
+	Cycle    int     `gorm:"column:cycle;type:int(11);not null;default:7" json:"cycle"`           // 周期(每周完成多少次)
+	State    int     `gorm:"column:state;type:int(1);not null;default:1" json:"state"`            // 状态
+	Duration int     `gorm:"column:duration;type:int(11);not null;default:1" json:"duration"`     // 时长
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *TaskSet) TableName() string {
+	return "TaskSet"
 }

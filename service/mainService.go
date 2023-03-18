@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/gin-gonic/gin"
+	"stvsljl.com/SSIMP/cos"
 	"stvsljl.com/SSIMP/db"
 	"stvsljl.com/SSIMP/redis"
 	"stvsljl.com/SSIMP/security"
@@ -17,6 +18,8 @@ func Start() {
 	utils.Log.Init()
 	// redis初始化
 	redis.Init()
+	// 对象存储初始化
+	cos.Init()
 	// 服务器服务启动
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
@@ -36,17 +39,29 @@ func Start() {
 	 * 加载路由
 	 **********************/
 	// 通信加密相关
-	router.GET("/api/encryption/rsapubkey", Rsapubkey)                            // 获取服务端公钥
-	router.POST("/api/encryption/rsatoaes", ClientRsakey)                         // 获取客户端公钥
-	router.POST("/api/account/admin/login", AdminLogin)                           // 管理员登录
-	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList)     // 获取员工信息列表
-	router.POST("/api/account/employee/add", AuthMiddleware(), EmployeeAdd)       // 添加员工信息
-	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate) // 更新员工信息
-	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete) // 删除员工信息
-	router.POST("/api/article/list", ArticleList)                                 // 获取文章列表
-	router.POST("/api/article/detail", ArticleDetail)                             // 获取文章详情
-	router.POST("/api/article/add", AuthMiddleware(), ArticleAdd)                 // 添加文章
-	router.POST("/api/article/update", AuthMiddleware(), ArticleUpdate)           // 更新文章
-	router.POST("/api/article/delete", AuthMiddleware(), ArticleDelete)           // 删除文章
+	router.GET("/api/encryption/rsapubkey", Rsapubkey)                                // 获取服务端公钥
+	router.POST("/api/encryption/rsatoaes", ClientRsakey)                             // 获取客户端公钥
+	router.POST("/api/account/admin/login", AdminLogin)                               // 管理员登录
+	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList)         // 获取员工信息列表
+	router.POST("/api/account/employee/add", AuthMiddleware(), EmployeeAdd)           // 添加员工信息
+	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate)     // 更新员工信息
+	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete)     // 删除员工信息
+	router.POST("/api/article/list", ArticleList)                                     // 获取文章列表
+	router.POST("/api/article/recommendlist", ArticleRecommendList)                   // 获取推荐文章列表
+	router.POST("/api/article/carousel", ArticleCarousel)                             // 获取轮播图文章列表
+	router.POST("/api/article/publiclist", ArticlePublicList)                         // 获取公开文章列表
+	router.POST("/api/article/detail", ArticleDetail)                                 // 获取文章详情
+	router.POST("/api/article/add", AuthMiddleware(), ArticleAdd)                     // 添加文章
+	router.POST("/api/article/update", AuthMiddleware(), ArticleUpdate)               // 更新文章
+	router.POST("/api/article/search", ArticleSearch)                                 // 搜索文章
+	router.GET("/api/article/tonocarousel", AuthMiddleware(), ArticleToNoCarousel)    // 将文章转为非轮播图
+	router.GET("/api/article/delete", AuthMiddleware(), ArticleDelete)                // 删除文章
+	router.POST("/api/taskset/list", TaskSetList)                                     // 获取任务集列表
+	router.POST("/api/taskset/add", AuthMiddleware(), TaskSetAdd)                     // 添加任务集
+	router.POST("/api/taskset/update", AuthMiddleware(), TaskSetUpdate)               // 更新任务集
+	router.GET("/api/taskset/delete", AuthMiddleware(), TaskSetDelete)                // 删除任务集
+	router.POST("/api/task/employertasklist", AuthMiddleware(), EmployerTaskList)     // 获取雇员任务列表
+	router.POST("/api/task/employertaskdelete", AuthMiddleware(), EmployerTaskDelete) // 删除雇员任务
+	router.POST("/api/task/employertaskadd", AuthMiddleware(), EmployerTaskAdd)       // 添加雇员任务
 	router.Run(":6521")
 }
