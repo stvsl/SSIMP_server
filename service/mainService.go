@@ -42,10 +42,12 @@ func Start() {
 	router.GET("/api/encryption/rsapubkey", Rsapubkey)                                // 获取服务端公钥
 	router.POST("/api/encryption/rsatoaes", ClientRsakey)                             // 获取客户端公钥
 	router.POST("/api/account/admin/login", AdminLogin)                               // 管理员登录
+	router.POST("/api/account/employee/login", EmployeeLogin)                         // 员工登录
 	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList)         // 获取员工信息列表
 	router.POST("/api/account/employee/add", AuthMiddleware(), EmployeeAdd)           // 添加员工信息
 	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate)     // 更新员工信息
 	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete)     // 删除员工信息
+	router.POST("/api/employee/tasklist", AuthMiddleware(), EmployeeTaskList)         // 获取员工任务列表
 	router.POST("/api/article/list", ArticleList)                                     // 获取文章列表
 	router.POST("/api/article/recommendlist", ArticleRecommendList)                   // 获取推荐文章列表
 	router.POST("/api/article/carousel", ArticleCarousel)                             // 获取轮播图文章列表
