@@ -65,5 +65,9 @@ func Start() {
 	router.POST("/api/task/employertasklist", AuthMiddleware(), EmployerTaskList)     // 获取雇员任务列表
 	router.POST("/api/task/employertaskdelete", AuthMiddleware(), EmployerTaskDelete) // 删除雇员任务
 	router.POST("/api/task/employertaskadd", AuthMiddleware(), EmployerTaskAdd)       // 添加雇员任务
+	router.POST("/api/employee/task/list", EmployerTaskListFull)                      // 雇员任务列表(员工端)
+	router.POST("/api/employee/task/sign", EmployerTaskSign)                          // 雇员签到(员工端)
+	router.POST("/api/employee/task/posupload", EmployerTaskSposUpload)               // 雇员上传位置(员工端)
+	router.POST("/api/employee/task/finish", EmployerTaskFinish)                      // 雇员完成任务(员工端)
 	router.Run(":6521")
 }

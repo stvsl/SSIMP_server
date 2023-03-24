@@ -11,7 +11,6 @@ import (
 )
 
 func Rsapubkey(c *gin.Context) {
-	fmt.Println("获取服务端公钥")
 	c.JSON(200, gin.H{
 		"pubkey": security.SERVER_RSA.GetPublicKey(),
 	})
