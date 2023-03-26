@@ -29,6 +29,32 @@ func TaskSetList(c *gin.Context) {
 	})
 }
 
+func TaskSetInfo(c *gin.Context) {
+	tid := c.Query("tid")
+	tidint, err := strconv.Atoi(tid)
+	if err != nil {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	taskset := db.TaskSet{}
+	if dbconn.Model(&taskset).Where("tid = ?", tidint).Scan(&taskset).Error != nil {
+		Code.SE601(c)
+		return
+	}
+	tasksetjson, err := json.Marshal(taskset)
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+		"data": string(tasksetjson),
+	})
+
+}
+
 func TaskSetAdd(c *gin.Context) {
 	taskset := db.TaskSet{}
 	err := c.BindJSON(&taskset)

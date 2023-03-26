@@ -89,6 +89,8 @@ CREATE TABLE `Attendance` (
 type Attendance struct {
 	Employid        string    `gorm:"primaryKey;column:employid;type:char(10);not null" json:"-"`      // 员工编号
 	Employer        Employer  `gorm:"joinForeignKey:employid;foreignKey:employid" json:"employerList"` // 员工信息表
+	Tid             int64     `gorm:"column:tid;type:int(12);not null" json:"tid"`                     // 任务编号
+	TaskSet         TaskSet   `gorm:"joinForeignKey:tid;foreignKey:tid" json:"taskSetList"`            // 任务设置表
 	StartTime       time.Time `gorm:"column:startTime;type:datetime;not null" json:"startTime"`        // 开始时间
 	EndTime         time.Time `gorm:"column:endTime;type:datetime" json:"endTime"`                     // 结束时间
 	TaskCompletion  string    `gorm:"column:task_completion;type:longtext" json:"taskCompletion"`      // 任务完成情况

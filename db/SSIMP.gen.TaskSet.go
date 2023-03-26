@@ -55,7 +55,7 @@ func (obj *_TaskSetMgr) Count(count *int64) (tx *gorm.DB) {
 //////////////////////////option case ////////////////////////////////////////////
 
 // WithTaskSetID taskSetID获取 任务集ID
-func (obj *_TaskSetMgr) WithTid(tid string) Option {
+func (obj *_TaskSetMgr) WithTid(tid int) Option {
 	return optionFunc(func(o *options) { o.query["tid"] = tid })
 }
 

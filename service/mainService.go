@@ -42,10 +42,12 @@ func Start() {
 	router.GET("/api/encryption/rsapubkey", Rsapubkey)                                // 获取服务端公钥
 	router.POST("/api/encryption/rsatoaes", ClientRsakey)                             // 获取客户端公钥
 	router.POST("/api/account/admin/login", AdminLogin)                               // 管理员登录
+	router.POST("/api/account/employee/login", EmployeeLogin)                         // 员工登录
 	router.POST("/api/account/employee/list", AuthMiddleware(), EmployeeList)         // 获取员工信息列表
 	router.POST("/api/account/employee/add", AuthMiddleware(), EmployeeAdd)           // 添加员工信息
 	router.POST("/api/account/employee/update", AuthMiddleware(), EmployeeUpdate)     // 更新员工信息
 	router.POST("/api/account/employee/delete", AuthMiddleware(), EmployeeDelete)     // 删除员工信息
+	router.POST("/api/employee/tasklist", AuthMiddleware(), EmployeeTaskList)         // 获取员工任务列表
 	router.POST("/api/article/list", ArticleList)                                     // 获取文章列表
 	router.POST("/api/article/recommendlist", ArticleRecommendList)                   // 获取推荐文章列表
 	router.POST("/api/article/carousel", ArticleCarousel)                             // 获取轮播图文章列表
@@ -57,11 +59,17 @@ func Start() {
 	router.GET("/api/article/tonocarousel", AuthMiddleware(), ArticleToNoCarousel)    // 将文章转为非轮播图
 	router.GET("/api/article/delete", AuthMiddleware(), ArticleDelete)                // 删除文章
 	router.POST("/api/taskset/list", TaskSetList)                                     // 获取任务集列表
+	router.GET("/api/taskset/info", TaskSetInfo)                                      // 获取任务集信息
 	router.POST("/api/taskset/add", AuthMiddleware(), TaskSetAdd)                     // 添加任务集
 	router.POST("/api/taskset/update", AuthMiddleware(), TaskSetUpdate)               // 更新任务集
 	router.GET("/api/taskset/delete", AuthMiddleware(), TaskSetDelete)                // 删除任务集
 	router.POST("/api/task/employertasklist", AuthMiddleware(), EmployerTaskList)     // 获取雇员任务列表
 	router.POST("/api/task/employertaskdelete", AuthMiddleware(), EmployerTaskDelete) // 删除雇员任务
 	router.POST("/api/task/employertaskadd", AuthMiddleware(), EmployerTaskAdd)       // 添加雇员任务
+	router.POST("/api/employee/task/list", EmployerTaskListFull)                      // 雇员任务列表(员工端)
+	router.POST("/api/employee/task/status", EmployerTaskStatus)                      // 雇员任务状态(员工端)
+	router.POST("/api/employee/task/sign", EmployerTaskSign)                          // 雇员签到(员工端)
+	router.POST("/api/employee/task/posupload", EmployerTaskSposUpload)               // 雇员上传位置(员工端)
+	router.POST("/api/employee/task/finish", EmployerTaskFinish)                      // 雇员完成任务(员工端)
 	router.Run(":6521")
 }
