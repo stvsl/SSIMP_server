@@ -30,6 +30,28 @@ func EmployeeList(c *gin.Context) {
 	})
 }
 
+func EmployeeInfo(c *gin.Context) {
+
+	eidstr := c.Query("eid")
+	if eidstr == "" {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	employee := db.Employer{}
+	dbconn.Model(&employee).Where("employid = ?", eidstr).First(&employee)
+	employeejson, err := json.Marshal(employee)
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+		"data": string(employeejson),
+	})
+}
+
 func EmployeeAdd(c *gin.Context) {
 	// 获取数据
 	var employee db.Employer
