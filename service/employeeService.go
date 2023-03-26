@@ -148,15 +148,3 @@ func EmployeeTaskList(c *gin.Context) {
 		"data": string(tasksetsjson),
 	})
 }
-
-func EmployerTaskSign(c *gin.Context) {
-
-}
-
-func EmployerTaskSposUpload(c *gin.Context) {
-
-}
-
-func EmployerTaskFinish(c *gin.Context) {
-
-}

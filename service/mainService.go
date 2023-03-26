@@ -59,6 +59,7 @@ func Start() {
 	router.GET("/api/article/tonocarousel", AuthMiddleware(), ArticleToNoCarousel)    // 将文章转为非轮播图
 	router.GET("/api/article/delete", AuthMiddleware(), ArticleDelete)                // 删除文章
 	router.POST("/api/taskset/list", TaskSetList)                                     // 获取任务集列表
+	router.GET("/api/taskset/info", TaskSetInfo)                                      // 获取任务集信息
 	router.POST("/api/taskset/add", AuthMiddleware(), TaskSetAdd)                     // 添加任务集
 	router.POST("/api/taskset/update", AuthMiddleware(), TaskSetUpdate)               // 更新任务集
 	router.GET("/api/taskset/delete", AuthMiddleware(), TaskSetDelete)                // 删除任务集
@@ -66,6 +67,7 @@ func Start() {
 	router.POST("/api/task/employertaskdelete", AuthMiddleware(), EmployerTaskDelete) // 删除雇员任务
 	router.POST("/api/task/employertaskadd", AuthMiddleware(), EmployerTaskAdd)       // 添加雇员任务
 	router.POST("/api/employee/task/list", EmployerTaskListFull)                      // 雇员任务列表(员工端)
+	router.POST("/api/employee/task/status", EmployerTaskStatus)                      // 雇员任务状态(员工端)
 	router.POST("/api/employee/task/sign", EmployerTaskSign)                          // 雇员签到(员工端)
 	router.POST("/api/employee/task/posupload", EmployerTaskSposUpload)               // 雇员上传位置(员工端)
 	router.POST("/api/employee/task/finish", EmployerTaskFinish)                      // 雇员完成任务(员工端)
