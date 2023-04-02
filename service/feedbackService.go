@@ -9,7 +9,6 @@ import (
 )
 
 func FeedbackList(c *gin.Context) {
-	// TODO
 	eid := c.Query("eid")
 	if eid == "" {
 		Code.SE401(c)
@@ -26,6 +25,19 @@ func FeedbackList(c *gin.Context) {
 		"data": string(feedbacksJson),
 	})
 
+}
+
+func FeedbackListAll(c *gin.Context) {
+	var feedbacks []db.Feedback
+	dbconn := db.GetConn()
+	dbconn.Table("Feedback").Find(&feedbacks)
+
+	feedbacksJson, _ := json.Marshal(feedbacks)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+		"data": string(feedbacksJson),
+	})
 }
 
 func FeedbackAdd(c *gin.Context) {

@@ -136,7 +136,7 @@ func (m *Employer) TableName() string {
 
 /******sql******
 CREATE TABLE `Feedback` (
-  `qid` int(20) NOT NULL COMMENT '问题编号',
+  `qid` int(10) NOT NULL AUTO_INCREMENT COMMENT '问题编号',
   `question` varchar(50) NOT NULL COMMENT '问题描述',
   `description` varchar(100) DEFAULT NULL COMMENT '问题详细描述',
   `picture` varchar(150) DEFAULT NULL COMMENT '问题图片',
@@ -144,9 +144,9 @@ CREATE TABLE `Feedback` (
   `sponsor` varchar(100) NOT NULL COMMENT '发起人',
   `teleinfo` varchar(20) NOT NULL COMMENT '发起人联系方式',
   `principal` char(10) DEFAULT NULL COMMENT '委派负责人',
-  `status` int(11) NOT NULL DEFAULT 1 COMMENT '处理进度',
+  `status` int(3) NOT NULL DEFAULT 1 COMMENT '处理进度',
   PRIMARY KEY (`qid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='问题及反馈表'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='问题及反馈表';
 ******sql******/
 // Feedback 问题及反馈表
 type Feedback struct {

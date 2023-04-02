@@ -77,7 +77,8 @@ func Start() {
 	router.POST("/api/attendance/record", AuthMiddleware(), AttendanceRecord)         // 获取考勤记录
 	router.POST("/api/employee/updatepasswd", EmployeeUpdatePasswd)                   // 修改员工密码(员工端)
 	router.POST("/api/employee/attendace/info", AttendaceInfo)                        // 修改员工信息(员工端)
-	router.POST("/api/feedback/list", FeedbackList)                                   // 查询反馈信息列表
+	router.POST("/api/feedback/list", FeedbackList)                                   // 查询反馈信息列表(指定员工)
+	router.POST("/api/feedback/list/all", AuthMiddleware(), FeedbackListAll)          // 查询反馈信息列表(所有员工)
 	router.POST("/api/feedback/add", FeedbackAdd)                                     // 添加反馈信息
 	router.Run(":6521")
 }
