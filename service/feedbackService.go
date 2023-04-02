@@ -16,8 +16,10 @@ func FeedbackList(c *gin.Context) {
 	}
 	var feedbacks []db.Feedback
 	dbconn := db.GetConn()
-	dbconn.Table("Feedback").Where("eid = ?", eid).Find(&feedbacks)
-
+	if dbconn.Table("Feedback").Where("sponsor = ?", eid).Find(&feedbacks).Error != nil {
+		Code.SE500(c)
+		return
+	}
 	feedbacksJson, _ := json.Marshal(feedbacks)
 	c.JSON(200, gin.H{
 		"code": "SE200",
