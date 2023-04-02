@@ -139,7 +139,7 @@ CREATE TABLE `Feedback` (
   `qid` int(20) NOT NULL COMMENT '问题编号',
   `question` varchar(50) NOT NULL COMMENT '问题描述',
   `description` varchar(100) DEFAULT NULL COMMENT '问题详细描述',
-  `picture` blob DEFAULT NULL COMMENT '问题图片',
+  `picture` varchar(150) DEFAULT NULL COMMENT '问题图片',
   `create_date` datetime NOT NULL COMMENT '创建日期',
   `sponsor` varchar(100) NOT NULL COMMENT '发起人',
   `teleinfo` varchar(20) NOT NULL COMMENT '发起人联系方式',
@@ -150,10 +150,10 @@ CREATE TABLE `Feedback` (
 ******sql******/
 // Feedback 问题及反馈表
 type Feedback struct {
-	Qid         int       `gorm:"primaryKey;column:qid;type:int(20);not null" json:"-"`        // 问题编号
+	Qid         int       `gorm:"primaryKey;column:qid;type:int(20);not null" json:"qid"`      // 问题编号
 	Question    string    `gorm:"column:question;type:varchar(50);not null" json:"question"`   // 问题描述
 	Description string    `gorm:"column:description;type:varchar(100)" json:"description"`     // 问题详细描述
-	Picture     []byte    `gorm:"column:picture;type:blob" json:"picture"`                     // 问题图片
+	Picture     string    `gorm:"column:picture;type:varchar(150)" json:"picture"`             // 问题图片
 	CreateDate  time.Time `gorm:"column:create_date;type:datetime;not null" json:"createDate"` // 创建日期
 	Sponsor     string    `gorm:"column:sponsor;type:varchar(100);not null" json:"sponsor"`    // 发起人
 	Teleinfo    string    `gorm:"column:teleinfo;type:varchar(20);not null" json:"teleinfo"`   // 发起人联系方式
