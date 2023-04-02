@@ -42,7 +42,45 @@ func EmployerTaskStatus(c *gin.Context) {
 		})
 	}
 }
+func AttendaceInfo(c *gin.Context) {
+	var info struct {
+		Employid string `json:"eid"`
+		Tid      int64  `json:"tid"`
+		Datestr  string `json:"date"`
+	}
+	err := c.BindJSON(&info)
+	if err != nil {
+		Code.SE400(c)
+		return
+	}
+	//datestr转换为date
+	date, err := time.Parse("2006-01-02", info.Datestr)
+	if err != nil {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	attendance := db.Attendance{}
+	// 查找数据库中是否有当天的该员工的签到记录
+	// 获取date当天凌晨的时间以及第二天凌晨的时间
+	year, month, day := date.Date()
+	zero := time.Date(year, month, day, 0, 0, 0, 0, date.Location())
+	zero2 := zero.AddDate(0, 0, 1)
 
+	// 查询数据库
+	dbconn.Model(&attendance).Where("employid = ? and tid = ? and startTime >= ? and startTime < ?", info.Employid, info.Tid, zero, zero2).First(&attendance)
+	// 如果没有找到
+	if attendance.InspectionTrack == "" {
+		Code.SE401(c)
+	} else {
+		attendancesjson, _ := json.Marshal(attendance)
+		c.JSON(200, gin.H{
+			"code": "SE200",
+			"msg":  "查询成功",
+			"data": string(attendancesjson),
+		})
+	}
+}
 func EmployerTaskSign(c *gin.Context) {
 	var info struct {
 		Employid string `json:"eid"`

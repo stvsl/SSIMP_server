@@ -75,5 +75,7 @@ func Start() {
 	router.POST("/api/attendance/list/day", AttendanceListDay)                        // 获取考勤日期集合
 	router.POST("/api/attendance/list", AuthMiddleware(), AttendanceList)             // 获取考勤列表
 	router.POST("/api/attendance/record", AuthMiddleware(), AttendanceRecord)         // 获取考勤记录
+	router.POST("/api/employee/updatepasswd", EmployeeUpdatePasswd)                   // 修改员工密码(员工端)
+	router.POST("/api/employee/attendace/info", AttendaceInfo)                       // 修改员工信息(员工端)
 	router.Run(":6521")
 }

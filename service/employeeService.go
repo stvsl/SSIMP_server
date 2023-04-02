@@ -51,6 +51,31 @@ func EmployeeInfo(c *gin.Context) {
 		"data": string(employeejson),
 	})
 }
+func EmployeeUpdatePasswd(c *gin.Context) {
+	var info struct {
+		Eid       string `json:"eid"`
+		Oldpasswd string `json:"oldpasswd"`
+		Newpasswd string `json:"newpasswd"`
+	}
+	err := c.BindJSON(&info)
+	if err != nil {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	employee := db.Employer{}
+	dbconn.Model(&employee).Where("employid = ?", info.Eid).First(&employee)
+	if employee.Passwd != info.Oldpasswd {
+		Code.SE406(c)
+		return
+	}
+	employee.Passwd = info.Newpasswd
+	dbconn.Model(&employee).Updates(&employee)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
 
 func EmployeeAdd(c *gin.Context) {
 	// 获取数据
