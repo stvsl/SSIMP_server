@@ -87,14 +87,12 @@ CREATE TABLE `Attendance` (
 ******sql******/
 // Attendance 考勤表
 type Attendance struct {
-	Employid        string    `gorm:"primaryKey;column:employid;type:char(10);not null" json:"-"`      // 员工编号
-	Employer        Employer  `gorm:"joinForeignKey:employid;foreignKey:employid" json:"employerList"` // 员工信息表
-	Tid             int64     `gorm:"column:tid;type:int(12);not null" json:"tid"`                     // 任务编号
-	TaskSet         TaskSet   `gorm:"joinForeignKey:tid;foreignKey:tid" json:"taskSetList"`            // 任务设置表
-	StartTime       time.Time `gorm:"column:startTime;type:datetime;not null" json:"startTime"`        // 开始时间
-	EndTime         time.Time `gorm:"column:endTime;type:datetime" json:"endTime"`                     // 结束时间
-	TaskCompletion  string    `gorm:"column:task_completion;type:longtext" json:"taskCompletion"`      // 任务完成情况
-	InspectionTrack string    `gorm:"column:inspection_track;type:longtext" json:"inspectionTrack"`    // 巡查轨迹
+	Employid        string    `gorm:"primaryKey;column:employid;type:char(10);not null" json:"eid"` // 员工编号
+	Tid             int64     `gorm:"column:tid;type:int(12);not null" json:"tid"`                  // 任务编号
+	StartTime       time.Time `gorm:"column:startTime;type:datetime;not null" json:"startTime"`     // 开始时间
+	EndTime         time.Time `gorm:"column:endTime;type:datetime" json:"endTime"`                  // 结束时间
+	TaskCompletion  string    `gorm:"column:task_completion;type:longtext" json:"taskCompletion"`   // 任务完成情况
+	InspectionTrack string    `gorm:"column:inspection_track;type:longtext" json:"inspectionTrack"` // 巡查轨迹
 }
 
 // TableName get sql table name.获取数据库表名
@@ -141,7 +139,7 @@ CREATE TABLE `Feedback` (
   `qid` int(20) NOT NULL COMMENT '问题编号',
   `question` varchar(50) NOT NULL COMMENT '问题描述',
   `description` varchar(100) DEFAULT NULL COMMENT '问题详细描述',
-  `picture` blob DEFAULT NULL COMMENT '问题图片',
+  `picture` varchar(150) DEFAULT NULL COMMENT '问题图片',
   `create_date` datetime NOT NULL COMMENT '创建日期',
   `sponsor` varchar(100) NOT NULL COMMENT '发起人',
   `teleinfo` varchar(20) NOT NULL COMMENT '发起人联系方式',
@@ -152,10 +150,10 @@ CREATE TABLE `Feedback` (
 ******sql******/
 // Feedback 问题及反馈表
 type Feedback struct {
-	Qid         int       `gorm:"primaryKey;column:qid;type:int(20);not null" json:"-"`        // 问题编号
+	Qid         int       `gorm:"primaryKey;column:qid;type:int(20);not null" json:"qid"`      // 问题编号
 	Question    string    `gorm:"column:question;type:varchar(50);not null" json:"question"`   // 问题描述
 	Description string    `gorm:"column:description;type:varchar(100)" json:"description"`     // 问题详细描述
-	Picture     []byte    `gorm:"column:picture;type:blob" json:"picture"`                     // 问题图片
+	Picture     string    `gorm:"column:picture;type:varchar(150)" json:"picture"`             // 问题图片
 	CreateDate  time.Time `gorm:"column:create_date;type:datetime;not null" json:"createDate"` // 创建日期
 	Sponsor     string    `gorm:"column:sponsor;type:varchar(100);not null" json:"sponsor"`    // 发起人
 	Teleinfo    string    `gorm:"column:teleinfo;type:varchar(20);not null" json:"teleinfo"`   // 发起人联系方式
