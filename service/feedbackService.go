@@ -74,3 +74,125 @@ func FeedbackAdd(c *gin.Context) {
 		"msg":  "success",
 	})
 }
+
+func FeedbackOrange(c *gin.Context) {
+	qid := c.Query("qid")
+	if qid == "" {
+		Code.SE401(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("update Feedback set status = 0 where qid = ?", qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
+
+func FeedbackAccept(c *gin.Context) {
+	qid := c.Query("qid")
+	if qid == "" {
+		Code.SE401(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("update Feedback set status = 1 where qid = ?", qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
+
+func FeedbackDoing(c *gin.Context) {
+	qid := c.Query("qid")
+	if qid == "" {
+		Code.SE401(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("update Feedback set status = 2 where qid = ?", qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
+
+func FeedbackSolved(c *gin.Context) {
+	qid := c.Query("qid")
+	if qid == "" {
+		Code.SE401(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("update Feedback set status = 3 where qid = ?", qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
+
+func FeedbackReject(c *gin.Context) {
+	qid := c.Query("qid")
+	if qid == "" {
+		Code.SE401(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("update Feedback set status = 4 where qid = ?", qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
+
+func FeedbackDelegate(c *gin.Context) {
+	var info struct {
+		Qid string `json:"qid"`
+		Eid string `json:"eid"`
+	}
+	if c.BindJSON(&info) != nil {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("update Feedback set principal = ? where qid = ?", info.Eid, info.Qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}
+
+func FeedbackDelete(c *gin.Context) {
+	qid := c.Query("qid")
+	if qid == "" {
+		Code.SE401(c)
+		return
+	}
+	dbconn := db.GetConn()
+	if err := dbconn.Exec("delete from Feedback where qid = ?", qid).Error; err != nil {
+		Code.SE500(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+	})
+}

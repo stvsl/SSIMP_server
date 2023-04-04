@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,6 @@ func EmployeeList(c *gin.Context) {
 		Code.SE602(c)
 		return
 	}
-	fmt.Println(employee)
 	c.JSON(200, gin.H{
 		"code": "SE200",
 		"msg":  "success",

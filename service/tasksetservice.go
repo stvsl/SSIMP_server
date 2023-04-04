@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,6 @@ func TaskSetList(c *gin.Context) {
 		return
 	}
 	tasksetjson, err := json.Marshal(taskset)
-	fmt.Println(string(tasksetjson))
 	if err != nil {
 		Code.SE602(c)
 		return
@@ -98,7 +96,6 @@ func TaskSetUpdate(c *gin.Context) {
 func TaskSetDelete(c *gin.Context) {
 
 	tid := c.Query("tid")
-	fmt.Println(tid)
 	tidint, err := strconv.Atoi(tid)
 	if err != nil {
 		Code.SE400(c)

@@ -80,5 +80,12 @@ func Start() {
 	router.POST("/api/feedback/list", FeedbackList)                                   // 查询反馈信息列表(指定员工)
 	router.POST("/api/feedback/list/all", AuthMiddleware(), FeedbackListAll)          // 查询反馈信息列表(所有员工)
 	router.POST("/api/feedback/add", FeedbackAdd)                                     // 添加反馈信息
+	router.POST("/api/feedback/set/orange", AuthMiddleware(), FeedbackOrange)         // 设置反馈信息为已接受
+	router.POST("/api/feedback/set/accept", AuthMiddleware(), FeedbackAccept)         // 设置反馈信息为已接受
+	router.POST("/api/feedback/set/solved", AuthMiddleware(), FeedbackSolved)         // 设置反馈信息为已完成
+	router.POST("/api/feedback/set/doing", AuthMiddleware(), FeedbackDoing)           // 设置反馈信息为未完成
+	router.POST("/api/feedback/set/reject", AuthMiddleware(), FeedbackReject)         // 拒绝反馈信为废弃
+	router.POST("/api/feedback/set/delegate", AuthMiddleware(), FeedbackDelegate)     // 设置反馈信息的委派人
+	router.POST("/api/feedback/delete", AuthMiddleware(), FeedbackDelete)             // 删除反馈信息
 	router.Run(":6521")
 }
