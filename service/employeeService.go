@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -22,11 +21,57 @@ func EmployeeList(c *gin.Context) {
 		Code.SE602(c)
 		return
 	}
-	fmt.Println(employee)
 	c.JSON(200, gin.H{
 		"code": "SE200",
 		"msg":  "success",
 		"data": string(employeejson),
+	})
+}
+
+func EmployeeInfo(c *gin.Context) {
+
+	eidstr := c.Query("eid")
+	if eidstr == "" {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	employee := db.Employer{}
+	dbconn.Model(&employee).Where("employid = ?", eidstr).First(&employee)
+	employeejson, err := json.Marshal(employee)
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+		"data": string(employeejson),
+	})
+}
+func EmployeeUpdatePasswd(c *gin.Context) {
+	var info struct {
+		Eid       string `json:"eid"`
+		Oldpasswd string `json:"oldpasswd"`
+		Newpasswd string `json:"newpasswd"`
+	}
+	err := c.BindJSON(&info)
+	if err != nil {
+		Code.SE400(c)
+		return
+	}
+	dbconn := db.GetConn()
+	employee := db.Employer{}
+	dbconn.Model(&employee).Where("employid = ?", info.Eid).First(&employee)
+	if employee.Passwd != info.Oldpasswd {
+		Code.SE406(c)
+		return
+	}
+	employee.Passwd = info.Newpasswd
+	dbconn.Model(&employee).Updates(&employee)
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
 	})
 }
 
