@@ -127,6 +127,8 @@ func ArticleDetail(c *gin.Context) {
 		"code": "SE200",
 		"data": string(json),
 	})
+	article.Pageviews++
+	articlemgr.Model(article).Update("pageviews", article.Pageviews)
 }
 
 func ArticleSearch(c *gin.Context) {

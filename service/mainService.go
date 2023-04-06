@@ -87,5 +87,6 @@ func Start() {
 	router.POST("/api/feedback/set/reject", AuthMiddleware(), FeedbackReject)         // 拒绝反馈信为废弃
 	router.POST("/api/feedback/set/delegate", AuthMiddleware(), FeedbackDelegate)     // 设置反馈信息的委派人
 	router.POST("/api/feedback/delete", AuthMiddleware(), FeedbackDelete)             // 删除反馈信息
+	router.POST("/api/data/analysis/global", DataAnalysisGlobal)                      // 获取全局数据分析
 	router.Run(":6521")
 }
