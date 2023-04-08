@@ -4,9 +4,10 @@ go 1.20
 
 require (
 	stvsljl.com/SSIMP/db v0.0.0
-	stvsljl.com/SSIMP/security v0.0.0
+	stvsljl.com/SSIMP/redis v0.0.0
+	stvsljl.com/SSIMP/security v0.0.0 // indirect
 	stvsljl.com/SSIMP/service v0.0.0
-	stvsljl.com/SSIMP/utils v0.0.0
+	stvsljl.com/SSIMP/utils v0.0.0 // indirect
 )
 
 replace (
@@ -61,5 +62,4 @@ require (
 	gorm.io/driver/mysql v1.4.7 // indirect
 	gorm.io/gorm v1.24.6 // indirect
 	stvsljl.com/SSIMP/cos v0.0.0 // indirect
-	stvsljl.com/SSIMP/redis v0.0.0 // indirect
 )

@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"time"
 
 	"stvsljl.com/SSIMP/utils"
 )
@@ -17,6 +18,8 @@ func (a *AESWaitClient) WriteToRedis() error {
 		utils.Log.Error("redis写入失败", err)
 		return err
 	}
+	// 设置过期时间
+	rdb.Expire(context.Background(), "AESWaitClient", time.Minute*5)
 	return nil
 }
 
