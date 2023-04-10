@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	stvsljl.com/SSIMP/db v0.0.0
-	stvsljl.com/SSIMP/redis v0.0.0
+	stvsljl.com/SSIMP/redis v0.0.0 // indirect
 	stvsljl.com/SSIMP/security v0.0.0 // indirect
 	stvsljl.com/SSIMP/service v0.0.0
 	stvsljl.com/SSIMP/utils v0.0.0 // indirect
