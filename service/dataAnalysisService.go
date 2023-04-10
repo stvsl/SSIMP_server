@@ -140,10 +140,45 @@ func WebVisit(c *gin.Context) {
 	redis.SetUpdateWebViewCount()
 }
 
-func DataAnalysisEmployee(c *gin.Context){
-	// string eid := c.Query("eid")
+func DataAnalysisEmployee(c *gin.Context) {
+	eid := c.Query("eid")
 	// // 获取一周出勤情况（一周内签到时间，一周内签退时间），一个月内缺勤天数，执勤天数
-	// dbconn := db.GetConn()
+	dbconn := db.GetConn()
+	var result []map[string]interface{}
+	err := dbconn.Table("Attendance").
+		Select("DATE(startTime) AS `日期`, COALESCE(MIN(startTime), CAST(CONCAT(DATE(startTime), ' 23:59:59') AS DATETIME)) AS `签到时间`, COALESCE(MAX(endTime), CAST(CONCAT(DATE(startTime), ' 23:59:59') AS DATETIME)) AS `签退时间`").
+		Where("employid = ? AND startTime >= DATE_SUB(NOW(), INTERVAL 1 WEEK)", eid).
+		Group("DATE(startTime)").
+		Order("DATE(startTime) DESC").
+		Scan(&result).Error
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	var info struct {
+		Zq int `json:"zq"`
+		Qq int `json:"qq"`
+	}
+	err = dbconn.Table("Attendance").
+		Select("COUNT(DISTINCT DATE(startTime)) AS `zq`, (SELECT DAY(LAST_DAY(CURDATE()))) - COUNT(DISTINCT DATE(startTime)) AS `qq`").
+		Where("employid = ? AND startTime >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)", eid).
+		Scan(&info).Error
+	if err != nil {
+		Code.SE602(c)
+	}
 
+	finalresult := make(map[string]interface{})
+	finalresult["data"] = result
+	finalresult["info"] = info
 
+	resultjson, err := json.Marshal(finalresult)
+	if err != nil {
+		Code.SE602(c)
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": "SE200",
+		"msg":  "success",
+		"data": string(resultjson),
+	})
 }
