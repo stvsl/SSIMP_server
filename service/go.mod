@@ -2,6 +2,7 @@ module stvsljl.com/SSIMP/service
 
 require (
 	github.com/gin-gonic/gin v1.9.0
+	github.com/gin-contrib/cors v1.3.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 )
 
