@@ -23,18 +23,6 @@ func Start() {
 	// 服务器服务启动
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
-	// 允许跨域
-	router.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-		c.Next()
-	})
 	/**********************
 	 * 加载路由
 	 **********************/
@@ -90,5 +78,16 @@ func Start() {
 	router.POST("/api/data/analysis/global", DataAnalysisGlobal)                      // 获取全局数据分析
 	router.POST("/api/data/analysis/employee", DataAnalysisEmployee)                  // 获取员工数据分析
 	router.GET("/api/data/web/visit", WebVisit)                                       // 增加文章访问量
+	router.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://ssimp.stvsljl.com")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
 	router.Run(":6521")
 }
