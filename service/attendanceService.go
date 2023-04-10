@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"stvsljl.com/SSIMP/db"
+	"stvsljl.com/SSIMP/utils"
 )
 
 func EmployerTaskStatus(c *gin.Context) {
@@ -142,6 +143,12 @@ func EmployerTaskSposUpload(c *gin.Context) {
 		Code.SE400(c)
 		return
 	}
+	tr, err := utils.ConvertToBaiduCoords(info.Track)
+	if err != nil {
+		Code.SE500(c)
+		return
+	}
+	info.Track = tr
 	dbconn := db.GetConn()
 	// 查找数据库中是否有当天的该员工的签到记录
 	// 获得当天凌晨的时间以及第二天凌晨的时间

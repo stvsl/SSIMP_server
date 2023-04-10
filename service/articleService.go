@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"stvsljl.com/SSIMP/cos"
 	"stvsljl.com/SSIMP/db"
+	"stvsljl.com/SSIMP/redis"
 )
 
 func ArticleList(c *gin.Context) {
@@ -127,6 +128,11 @@ func ArticleDetail(c *gin.Context) {
 		"code": "SE200",
 		"data": string(json),
 	})
+	article.Pageviews++
+	articlemgr.Model(article).Update("pageviews", article.Pageviews)
+	// 更新Redis浏览量
+	red := redis.RunningData{}
+	red.AddNewViewCount()
 }
 
 func ArticleSearch(c *gin.Context) {
