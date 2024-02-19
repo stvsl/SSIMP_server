@@ -1,11 +1,11 @@
 package db
 
-import (
-	"context"
-	"fmt"
-	"gorm.io/gorm"
-	"time"
-)
+import (	
+"fmt"	
+"context"	
+"gorm.io/gorm"	
+"time"	
+)	
 
 type _SyslogMgr struct {
 	*_BaseMgr
@@ -17,7 +17,13 @@ func SyslogMgr(db *gorm.DB) *_SyslogMgr {
 		panic(fmt.Errorf("SyslogMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &_SyslogMgr{_BaseMgr: &_BaseMgr{DB: db.Table("Syslog"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &_SyslogMgr{_BaseMgr: &_BaseMgr{DB: db.Table("Syslog"), isRelated: globalIsRelated,ctx:ctx,cancel:cancel,timeout:-1}}
+}
+
+// Debug open debug.打开debug模式查看sql语句
+func (obj *_SyslogMgr) Debug() *_SyslogMgr {
+	obj._BaseMgr.DB = obj._BaseMgr.DB.Debug()
+	return obj
 }
 
 // GetTableName get sql table name.获取数据库名字
@@ -31,17 +37,17 @@ func (obj *_SyslogMgr) Reset() *_SyslogMgr {
 	return obj
 }
 
-// Get 获取
+// Get 获取 
 func (obj *_SyslogMgr) Get() (result Syslog, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Find(&result).Error
-
+	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).First(&result).Error
+	
 	return
 }
 
 // Gets 获取批量结果
 func (obj *_SyslogMgr) Gets() (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Find(&results).Error
-
+	
 	return
 }
 
@@ -74,6 +80,7 @@ func (obj *_SyslogMgr) WithExtra(extra string) Option {
 	return optionFunc(func(o *options) { o.query["extra"] = extra })
 }
 
+
 // GetByOption 功能选项模式获取
 func (obj *_SyslogMgr) GetByOption(opts ...Option) (result Syslog, err error) {
 	options := options{
@@ -83,8 +90,8 @@ func (obj *_SyslogMgr) GetByOption(opts ...Option) (result Syslog, err error) {
 		o.apply(&options)
 	}
 
-	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where(options.query).Find(&result).Error
-
+	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where(options.query).First(&result).Error
+	
 	return
 }
 
@@ -98,12 +105,13 @@ func (obj *_SyslogMgr) GetByOptions(opts ...Option) (results []*Syslog, err erro
 	}
 
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where(options.query).Find(&results).Error
-
+	
 	return
 }
 
+
 // SelectPage 分页查询
-func (obj *_SyslogMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
+func (obj *_SyslogMgr) SelectPage(page IPage,opts ...Option) (resultPage IPage, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -111,75 +119,77 @@ func (obj *_SyslogMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage,
 		o.apply(&options)
 	}
 	resultPage = page
-	results := make([]Syslog, 0)
+	results := make([]Syslog,0)
 	var count int64 // 统计总的记录数
-	query := obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where(options.query)
+	query :=  obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
 		query = query.Order(page.GetOrederItemsString())
 	}
 	err = query.Limit(int(page.GetSize())).Offset(int(page.Offset())).Find(&results).Error
-
+	
 	resultPage.SetRecords(results)
 	return
 }
 
+
 //////////////////////////enume case ////////////////////////////////////////////
 
-// GetFromInfo 通过info获取内容 日志信息
+
+// GetFromInfo 通过info获取内容 日志信息 
 func (obj *_SyslogMgr) GetFromInfo(info string) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`info` = ?", info).Find(&results).Error
-
+	
 	return
 }
 
 // GetBatchFromInfo 批量查找 日志信息
 func (obj *_SyslogMgr) GetBatchFromInfo(infos []string) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`info` IN (?)", infos).Find(&results).Error
-
+	
 	return
 }
-
-// GetFromTime 通过time获取内容 时间
+ 
+// GetFromTime 通过time获取内容 时间 
 func (obj *_SyslogMgr) GetFromTime(time time.Time) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`time` = ?", time).Find(&results).Error
-
+	
 	return
 }
 
 // GetBatchFromTime 批量查找 时间
 func (obj *_SyslogMgr) GetBatchFromTime(times []time.Time) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`time` IN (?)", times).Find(&results).Error
-
+	
 	return
 }
-
-// GetFromText 通过text获取内容 日志内容
+ 
+// GetFromText 通过text获取内容 日志内容 
 func (obj *_SyslogMgr) GetFromText(text string) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`text` = ?", text).Find(&results).Error
-
+	
 	return
 }
 
 // GetBatchFromText 批量查找 日志内容
 func (obj *_SyslogMgr) GetBatchFromText(texts []string) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`text` IN (?)", texts).Find(&results).Error
-
+	
 	return
 }
-
-// GetFromExtra 通过extra获取内容 附加信息
+ 
+// GetFromExtra 通过extra获取内容 附加信息 
 func (obj *_SyslogMgr) GetFromExtra(extra string) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`extra` = ?", extra).Find(&results).Error
-
+	
 	return
 }
 
 // GetBatchFromExtra 批量查找 附加信息
 func (obj *_SyslogMgr) GetBatchFromExtra(extras []string) (results []*Syslog, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(Syslog{}).Where("`extra` IN (?)", extras).Find(&results).Error
-
+	
 	return
 }
 

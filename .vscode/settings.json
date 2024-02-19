@@ -1,3 +1,5 @@
 {
-    "go.inferGopath": false
+  "go.inferGopath": false,
+  "stm32-for-vscode.openOCDPath": false,
+  "stm32-for-vscode.armToolchainPath": false
 }
